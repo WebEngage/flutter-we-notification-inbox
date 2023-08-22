@@ -13,6 +13,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
   List<dynamic> _notificationList = [];
   List<CellData> cellDataList = [];
   bool _hasNextPage = false;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -28,6 +29,10 @@ class _NotificationInboxState extends State<NotificationInbox> {
       handleSuccess(notificationList);
     } catch (error) {
       throw error;
+    } finally {
+      setState(() {
+        _isLoading = false; // Fetching is complete, set loading to false
+      });
     }
   }
 
@@ -37,10 +42,13 @@ class _NotificationInboxState extends State<NotificationInbox> {
     try {
       notificationList = await _weNotificationinboxFlutterPlugin
           .getNotificationList(offsetJSON: offset);
-      print("Fetched more");
       handleSuccess(notificationList, isFetchMore: true);
     } catch (error) {
       throw error;
+    } finally {
+      setState(() {
+        _isLoading = false; // Fetching is complete, set loading to false
+      });
     }
   }
 
@@ -75,18 +83,22 @@ class _NotificationInboxState extends State<NotificationInbox> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: cellDataList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return CustomCell(
-            title: cellDataList[index].title,
-            description: cellDataList[index].description,
-            experimentId: cellDataList[index].experimentId,
-            status: cellDataList[index].status,
-            inboxMessage: cellDataList[index].inboxMessage,
-          );
-        },
-      ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.builder(
+              itemCount: cellDataList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return CustomCell(
+                  title: cellDataList[index].title,
+                  description: cellDataList[index].description,
+                  experimentId: cellDataList[index].experimentId,
+                  status: cellDataList[index].status,
+                  inboxMessage: cellDataList[index].inboxMessage,
+                );
+              },
+            ),
     );
   }
 
@@ -103,6 +115,9 @@ class _NotificationInboxState extends State<NotificationInbox> {
         break;
       case 'fetchMore':
         if (_hasNextPage) {
+          setState(() {
+            _isLoading = false;
+          });
           fetchNext();
         }
         break;

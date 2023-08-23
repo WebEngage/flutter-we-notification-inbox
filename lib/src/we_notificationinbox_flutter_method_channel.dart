@@ -16,6 +16,14 @@ class MethodChannelWeNotificationinboxFlutter
       const MethodChannel(METHOD_CHANNEL_WE_NOTIFICATIONINBOX_FLUTTER);
 
   @override
+  Future<bool> initNotificationInbox() async {
+    WELogger.v("WE NI MethodChannel init Notification Inbox");
+    final registered = await methodChannel
+        .invokeMethod<dynamic>(METHOD_NAME_INIT_NOTIFICATION_INBOX, {});
+    return registered as bool;
+  }
+
+  @override
   Future<String> getNotificationCount() async {
     try {
       final result =
@@ -134,7 +142,7 @@ class MethodChannelWeNotificationinboxFlutter
   }
 
   dynamic notificationListResponse(dynamic result) {
-    WELogger.v('notificationListResponse reeceived result-$result');
+    WELogger.v('notificationListResponse received result-$result');
     Map<String, dynamic> responseData = {};
     final messageString = result[MESSAGELIST] as String;
     final hasNextPage = result[HASNEXT] as bool;

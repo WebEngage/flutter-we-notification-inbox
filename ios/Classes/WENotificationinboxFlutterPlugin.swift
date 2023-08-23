@@ -11,6 +11,10 @@ public class WeNotificationinboxFlutterPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
    switch call.method {
+        case WEConstants.METHOD_NAME_INIT:
+            WELogger.initLogger()
+            WELogger.d("WE-NI I \(call.method) \(String(describing: call.arguments))")
+            WENotificationInbox.initialize()
         case WEConstants.METHOD_NAME_GET_NOTIFICATION_COUNT:
             getNotificationCount(result: result)
         case WEConstants.METHOD_NAME_GET_NOTIFICATION_LIST:

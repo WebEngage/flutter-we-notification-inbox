@@ -11,6 +11,7 @@ const METHOD_NAME_READ_ALL = "readAll";
 const METHOD_NAME_UNREAD_ALL = "unReadAll";
 const METHOD_NAME_DELETE_ALL = "deleteAll";
 const METHOD_NAME_RESET_NOTIFICATION_COUNT = "resetNotificationCount";
+const METHOD_NAME_INIT_NOTIFICATION_INBOX = "init";
 
 const OFFSETJSON = "offsetJSON";
 const MESSAGELIST = "messageList";

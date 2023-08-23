@@ -11,7 +11,8 @@ struct WEConstants{
    static let METHOD_NAME_UNREAD_ALL = "unReadAll"
    static let METHOD_NAME_DELETE_ALL = "deleteAll"
    static let METHOD_NAME_RESET_NOTIFICATION_COUNT = "resetNotificationCount"
- 
+   static let METHOD_NAME_INIT = "init"
+
    static let MESSAGELIST = "messageList"
    static let OFFSETJSON = "offsetJSON"
    static let HASNEXT = "hasNext"

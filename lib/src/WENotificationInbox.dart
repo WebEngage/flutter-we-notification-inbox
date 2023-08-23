@@ -1,4 +1,5 @@
 import '../../src/we_notificationinbox_flutter_platform_interface.dart';
+import '../utils/WELogger.dart';
 
 class WENotificationInbox {
   static final WENotificationInbox _singleton = WENotificationInbox._internal();
@@ -8,7 +9,8 @@ class WENotificationInbox {
   }
   WENotificationInbox._internal();
 
-  void init() {
+  void init({bool enableLogs = false}) {
+    WELogger.enableLogs(enableLogs);
     WeNotificationinboxFlutterPlatform.instance.initNotificationInbox();
   }
 

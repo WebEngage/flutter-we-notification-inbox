@@ -49,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     WebEngagePlugin _webenagePlugin = WebEngagePlugin();
+    WENotificationInbox().init(enableLogs: true);
     initSharedPref();
     _init();
   }

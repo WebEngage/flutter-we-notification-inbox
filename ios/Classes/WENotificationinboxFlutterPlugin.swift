@@ -174,7 +174,7 @@ public class WeNotificationinboxFlutterPlugin: NSObject, FlutterPlugin {
     }
 
     func initialiseWEGVersion() {
-        let key: WegVersionKey = .RNNI
+        let key: WegVersionKey = .FLNI
         WebEngage.sharedInstance().setVersionForChildSDK(WEGPluginVersion, for: key)
       }
 }

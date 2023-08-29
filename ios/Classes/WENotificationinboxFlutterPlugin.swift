@@ -1,8 +1,14 @@
 import Flutter
 import UIKit
 import WENotificationInbox
+import WebEngage
+
+
 
 public class WeNotificationinboxFlutterPlugin: NSObject, FlutterPlugin {
+    
+  let WEGPluginVersion = "1.0.0"
+    
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: WEConstants.WE_NOTIFICATIONINBOX_FLUTTER, binaryMessenger: registrar.messenger())
     let instance = WeNotificationinboxFlutterPlugin()
@@ -15,6 +21,7 @@ public class WeNotificationinboxFlutterPlugin: NSObject, FlutterPlugin {
             WELogger.initLogger()
             WELogger.d("WE-NI I \(call.method) \(String(describing: call.arguments))")
             WENotificationInbox.initialize()
+            initialiseWEGVersion()
         case WEConstants.METHOD_NAME_GET_NOTIFICATION_COUNT:
             getNotificationCount(result: result)
         case WEConstants.METHOD_NAME_GET_NOTIFICATION_LIST:
@@ -165,4 +172,9 @@ public class WeNotificationinboxFlutterPlugin: NSObject, FlutterPlugin {
         }
         return ""
     }
+
+    func initialiseWEGVersion() {
+        let key: WegVersionKey = .RNNI
+        WebEngage.sharedInstance().setVersionForChildSDK(WEGPluginVersion, for: key)
+      }
 }

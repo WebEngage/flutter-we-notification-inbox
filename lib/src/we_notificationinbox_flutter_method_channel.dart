@@ -38,8 +38,10 @@ class MethodChannelWeNotificationinboxFlutter
   Future<dynamic> getNotificationList({dynamic offsetJSON}) async {
     try {
       WELogger.v("JSON offset passed to Native- $offsetJSON");
+      // TODO - check if this is creating issue for iOS
+      String jsonString = jsonEncode(offsetJSON);
       final dynamic result = await methodChannel.invokeMethod(
-          METHOD_NAME_GET_NOTIFICATION_LIST, {OFFSETJSON: offsetJSON});
+          METHOD_NAME_GET_NOTIFICATION_LIST, {OFFSETJSON: jsonString});
       if (result != null) {
         final Map<String, dynamic> response = notificationListResponse(result);
         return response;
@@ -142,7 +144,12 @@ class MethodChannelWeNotificationinboxFlutter
   }
 
   dynamic notificationListResponse(dynamic result) {
+    var ml = result[MESSAGELIST];
+    var mlStr = result[MESSAGELIST] as String;
     WELogger.v('notificationListResponse received result-$result');
+    WELogger.v('notificationListResponse received result[ml] -$ml');
+    WELogger.v('notificationListResponse received mlStr-$mlStr');
+    // WELogger.v('notificationListResponse received mlStr-$mlStr');
     Map<String, dynamic> responseData = {};
     final messageString = result[MESSAGELIST] as String;
     final hasNextPage = result[HASNEXT] as bool;

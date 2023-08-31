@@ -41,7 +41,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _weNotificationinboxFlutterPlugin = WENotificationinboxFlutter();
-  String _notificationCount = "";
+  String _notificationCount = "0";
   var _cuidValue = "";
   var _isLogin = false;
 
@@ -119,9 +119,20 @@ class _MyHomePageState extends State<MyHomePage> {
     Utils.setIsLogin(false);
   }
 
+  void _getCount() {
+    getNotificationCount();
+  }
+
   void _onValueChange(value) {
     _cuidValue = value;
   }
+
+  NotificationInbox _navigateToNotificationInbox() {
+    print("AKC: printing before navigating");
+    resetNotificationCount();
+    return NotificationInbox();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NotificationInbox(),
+                  builder: (context) => _navigateToNotificationInbox(),
                 ),
               );
             },
@@ -149,17 +160,20 @@ class _MyHomePageState extends State<MyHomePage> {
               child: _isLogin
                   ? Column(
                       children: [
-                        Container(
-                          child: Text(
-                              'Welcome,\n $_cuidValue you have $_notificationCount notifications.',
-                              style: const TextStyle(
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold)),
-                        ),
+                        Text(
+                            'Welcome,\n $_cuidValue you have $_notificationCount notifications.',
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontStyle: FontStyle.italic,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold)),
                         Container(
                             child: CustomWidgets.button("Logout", _logout)),
+                        Container(
+                          // Add the new button here
+                          child: CustomWidgets.button("Get Count", _getCount),
+                        ),
+
                       ],
                     )
                   : Column(

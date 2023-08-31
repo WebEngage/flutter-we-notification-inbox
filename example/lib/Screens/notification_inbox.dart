@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:we_notificationinbox_flutter/utils/WELogger.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
 import '../Models/CustomCell.dart';
 import '../Models/cell_model.dart';
@@ -14,18 +15,37 @@ class _NotificationInboxState extends State<NotificationInbox> {
   List<CellData> cellDataList = [];
   bool _hasNextPage = false;
   bool _isLoading = true;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     fetchNotificationList();
+    // Add a listener to the ScrollController
+    _scrollController.addListener(() {
+      // Check if we have reached the end of the list
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        // This means we have scrolled to the end of the list
+        // You can perform your desired action here.
+        // print("Reached the last cell!!!!!!!!");
+        if (_hasNextPage) {
+          setState(() {
+            _isLoading = true;
+          });
+          fetchNext();
+        } else {
+          print("========End of the List=========");
+        }
+      }
+    });
   }
 
   Future<void> fetchNotificationList() async {
     Map<String, dynamic> notificationList;
     try {
-      notificationList =
+      var notificationList =
           await _weNotificationinboxFlutterPlugin.getNotificationList();
+      WELogger.v("WebEngage AKC: fetch list - $notificationList");
       handleSuccess(notificationList);
     } catch (error) {
       throw error;
@@ -38,10 +58,15 @@ class _NotificationInboxState extends State<NotificationInbox> {
 
   Future<void> fetchNext() async {
     Map<String, dynamic> notificationList;
-    var offset = _notificationList[_notificationList.length - 1];
+    // var offset = _notificationList[0];
+    var offset = _notificationList[_notificationList.length-1];
+    WELogger.v("WebEngage List Fetching with offset - $offset");
+
     try {
       notificationList = await _weNotificationinboxFlutterPlugin
           .getNotificationList(offsetJSON: offset);
+      WELogger.v("WebEngage List with offset - $notificationList");
+
       handleSuccess(notificationList, isFetchMore: true);
     } catch (error) {
       throw error;
@@ -51,6 +76,16 @@ class _NotificationInboxState extends State<NotificationInbox> {
       });
     }
   }
+
+  void updateCellDataList(int index, String newStatus) {
+    // print("AKC: updateCellDataList - ${cellDataList[index].status} to $newStatus");
+    setState(() {
+      _notificationList[index]["status"] = newStatus;
+    });
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,14 +123,24 @@ class _NotificationInboxState extends State<NotificationInbox> {
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemCount: cellDataList.length,
+        controller: _scrollController,
+        itemCount: _notificationList.length,
               itemBuilder: (BuildContext context, int index) {
+                final notificationItem = _notificationList[index];
+                final Map<String, dynamic> message = notificationItem["message"] ?? {};
+                final String title = message["title"] ?? "";
+                final String description = message["message"] ?? "";
+                final String experimentId = notificationItem["experimentId"] ?? "";
+                final String status = notificationItem["status"] ?? "";
                 return CustomCell(
-                  title: cellDataList[index].title,
-                  description: cellDataList[index].description,
-                  experimentId: cellDataList[index].experimentId,
-                  status: cellDataList[index].status,
-                  inboxMessage: cellDataList[index].inboxMessage,
+                  title: title,
+                  description: description,
+                  experimentId: experimentId,
+                  status: status,
+                  inboxMessage: notificationItem,
+                  updateStatus: (newStatus) {
+                    updateCellDataList(index, newStatus);
+                  }
                 );
               },
             ),
@@ -105,10 +150,35 @@ class _NotificationInboxState extends State<NotificationInbox> {
   void handleMenuItemSelected(BuildContext context, String value) {
     switch (value) {
       case 'readAll':
+        var _cloneNotificationList = _notificationList;
         _weNotificationinboxFlutterPlugin.readAll(_notificationList);
+
+        // for(var i=0; i<cellDataList.length;i++) {
+        //   updateCellDataList(i,"read");
+        // }
+        for(var i=0; i<_cloneNotificationList.length;i++) {
+          print("AKC NI ${_cloneNotificationList[i]["status"]}");
+          _cloneNotificationList[i]["status"] = "read";
+        }
+        setState(() {
+          _notificationList = _cloneNotificationList;
+        });
         break;
       case 'unreadAll':
+        var _cloneNotificationList = _notificationList;
         _weNotificationinboxFlutterPlugin.unReadAll(_notificationList);
+        // for(var i=0; i<cellDataList.length;i++) {
+        //   updateCellDataList(i,"unread");
+        // }
+
+        for (var i = 0; i < _cloneNotificationList.length; i++) {
+          print("AKC NI ${_cloneNotificationList[i]["status"]}");
+
+          _cloneNotificationList[i]["status"] = "unread";
+        }
+        setState(() {
+          _notificationList = _cloneNotificationList;
+        });
         break;
       case 'deleteAll':
         _weNotificationinboxFlutterPlugin.deleteAll(_notificationList);
@@ -134,24 +204,24 @@ class _NotificationInboxState extends State<NotificationInbox> {
       cellDataList.clear();
     }
 
-    notificationItems.map((notificationItem) {
-      final String status = notificationItem['status'] ?? '';
-      final Map<String, dynamic> message = notificationItem['message'] ?? {};
-      final String title = message['title'] ?? '';
-      final String description = message['message'] ?? '';
-      final String experimentId = notificationItem['experimentId'] ?? '';
-
-      cellDataList.add(
-        CellData(
-            title: title,
-            description: description,
-            experimentId: experimentId,
-            status: status,
-            inboxMessage: notificationItem),
-      );
-    }).toList();
+    // notificationItems.map((notificationItem) {
+    //   final String status = notificationItem['status'] ?? '';
+    //   final Map<String, dynamic> message = notificationItem['message'] ?? {};
+    //   final String title = message['title'] ?? '';
+    //   final String description = message['message'] ?? '';
+    //   final String experimentId = notificationItem['experimentId'] ?? '';
+    //
+    //   // cellDataList.add(
+    //   //   CellData(
+    //   //       title: title,
+    //   //       description: description,
+    //   //       experimentId: experimentId,
+    //   //       status: status,
+    //   //       inboxMessage: notificationItem),
+    //   // );
+    // }).toList();
     setState(() {
-      _notificationList = notificationItems;
+      _notificationList.addAll(notificationItems);
       _hasNextPage = hasNextPage;
     });
   }

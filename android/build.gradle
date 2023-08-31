@@ -41,6 +41,14 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
     }
+}
+dependencies {
+        implementation project(':android-notification-inbox')
+    implementation 'com.webengage:android-sdk:4.+'
+//    implementation 'com.webengage:we-notification-inbox:1.0.0'
+
+//    classpath 'com.android.tools.build:gradle:7.2.0'
+//    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 }

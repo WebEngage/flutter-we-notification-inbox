@@ -16,3 +16,10 @@ const METHOD_NAME_INIT_NOTIFICATION_INBOX = "init";
 const OFFSETJSON = "offsetJSON";
 const MESSAGELIST = "messageList";
 const HASNEXT = "hasNext";
+
+enum STATUS {
+  READ,
+  UNREAD,
+}
+
+

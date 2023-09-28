@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:we_notificationinbox_flutter/utils/WELogger.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
 import '../Models/CustomCell.dart';
 import '../Models/cell_model.dart';
 
 class NotificationInbox extends StatefulWidget {
+  const NotificationInbox({super.key});
+
   @override
   _NotificationInboxState createState() => _NotificationInboxState();
 }
@@ -15,7 +18,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
   List<CellData> cellDataList = [];
   bool _hasNextPage = false;
   bool _isLoading = true;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -24,7 +27,8 @@ class _NotificationInboxState extends State<NotificationInbox> {
     // Add a listener to the ScrollController
     _scrollController.addListener(() {
       // Check if we have reached the end of the list
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         // This means we have scrolled to the end of the list
         // You can perform your desired action here.
         // print("Reached the last cell!!!!!!!!");
@@ -41,7 +45,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
   }
 
   Future<void> fetchNotificationList() async {
-    Map<String, dynamic> notificationList;
     try {
       var notificationList =
           await _weNotificationinboxFlutterPlugin.getNotificationList();
@@ -59,7 +62,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
   Future<void> fetchNext() async {
     Map<String, dynamic> notificationList;
     // var offset = _notificationList[0];
-    var offset = _notificationList[_notificationList.length-1];
+    var offset = _notificationList[_notificationList.length - 1];
     WELogger.v("WebEngage List Fetching with offset - $offset");
 
     try {
@@ -69,7 +72,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
 
       handleSuccess(notificationList, isFetchMore: true);
     } catch (error) {
-      throw error;
+      rethrow;
     } finally {
       setState(() {
         _isLoading = false; // Fetching is complete, set loading to false
@@ -83,9 +86,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
       _notificationList[index]["status"] = newStatus;
     });
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,40 +110,82 @@ class _NotificationInboxState extends State<NotificationInbox> {
                 value: 'deleteAll',
                 child: Text('Delete All'),
               ),
-              const PopupMenuItem<String>(
-                value: 'fetchMore',
-                child: Text('Fetch More'),
-              ),
             ],
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-        controller: _scrollController,
-        itemCount: _notificationList.length,
+      body: Stack(
+        children: [
+          if (_notificationList.isNotEmpty)
+            ListView.builder(
+              controller: _scrollController,
+              itemCount: _notificationList.length,
               itemBuilder: (BuildContext context, int index) {
                 final notificationItem = _notificationList[index];
-                final Map<String, dynamic> message = notificationItem["message"] ?? {};
+                final Map<String, dynamic> message =
+                    notificationItem["message"] ?? {};
                 final String title = message["title"] ?? "";
                 final String description = message["message"] ?? "";
-                final String experimentId = notificationItem["experimentId"] ?? "";
+                final String experimentId =
+                    notificationItem["experimentId"] ?? "";
                 final String status = notificationItem["status"] ?? "";
                 return CustomCell(
-                  title: title,
-                  description: description,
-                  experimentId: experimentId,
-                  status: status,
-                  inboxMessage: notificationItem,
-                  updateStatus: (newStatus) {
-                    updateCellDataList(index, newStatus);
-                  }
-                );
+                    title: title,
+                    description: description,
+                    experimentId: experimentId,
+                    status: status,
+                    inboxMessage: notificationItem,
+                    updateStatus: (newStatus) {
+                      updateCellDataList(index, newStatus);
+                    });
               },
+            )
+          else if (_isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              // Semi-transparent background
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          else if (!_isLoading)
+            const Center(
+              child: Text("Sorry! You don't have any List available!"),
             ),
+          if (_isLoading && _notificationList.isNotEmpty)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 20,
+              child: _isLoading
+                  ? Container(
+                      color: Colors.black.withOpacity(0.1),
+                      child: Center(
+                        child: Transform.scale(
+                          scale:
+                              2.0, // Increase the scale value to increase the size
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    )
+                  : const SizedBox
+                      .shrink(), // Hide the spinner when not loading
+              // Hide the spinner when not loading
+            ),
+        ],
+      ),
+    );
+  }
+
+  void showToastMessage() {
+    Fluttertoast.showToast(
+      msg: "You have reached the end of the message list!",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.grey,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 
@@ -156,9 +198,9 @@ class _NotificationInboxState extends State<NotificationInbox> {
         // for(var i=0; i<cellDataList.length;i++) {
         //   updateCellDataList(i,"read");
         // }
-        for(var i=0; i<_cloneNotificationList.length;i++) {
+        for (var i = 0; i < _cloneNotificationList.length; i++) {
           print("AKC NI ${_cloneNotificationList[i]["status"]}");
-          _cloneNotificationList[i]["status"] = "read";
+          _cloneNotificationList[i]["status"] = "READ";
         }
         setState(() {
           _notificationList = _cloneNotificationList;
@@ -174,7 +216,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
         for (var i = 0; i < _cloneNotificationList.length; i++) {
           print("AKC NI ${_cloneNotificationList[i]["status"]}");
 
-          _cloneNotificationList[i]["status"] = "unread";
+          _cloneNotificationList[i]["status"] = "UNREAD";
         }
         setState(() {
           _notificationList = _cloneNotificationList;
@@ -182,14 +224,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
         break;
       case 'deleteAll':
         _weNotificationinboxFlutterPlugin.deleteAll(_notificationList);
-        break;
-      case 'fetchMore':
-        if (_hasNextPage) {
-          setState(() {
-            _isLoading = false;
-          });
-          fetchNext();
-        }
         break;
     }
   }
@@ -203,23 +237,10 @@ class _NotificationInboxState extends State<NotificationInbox> {
     if (isFetchMore) {
       cellDataList.clear();
     }
+    if (!hasNextPage && _notificationList.length > 0) {
+      showToastMessage();
+    }
 
-    // notificationItems.map((notificationItem) {
-    //   final String status = notificationItem['status'] ?? '';
-    //   final Map<String, dynamic> message = notificationItem['message'] ?? {};
-    //   final String title = message['title'] ?? '';
-    //   final String description = message['message'] ?? '';
-    //   final String experimentId = notificationItem['experimentId'] ?? '';
-    //
-    //   // cellDataList.add(
-    //   //   CellData(
-    //   //       title: title,
-    //   //       description: description,
-    //   //       experimentId: experimentId,
-    //   //       status: status,
-    //   //       inboxMessage: notificationItem),
-    //   // );
-    // }).toList();
     setState(() {
       _notificationList.addAll(notificationItems);
       _hasNextPage = hasNextPage;

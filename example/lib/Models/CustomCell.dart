@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:we_notificationinbox_flutter/utils/WELogger.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
+import 'package:we_notificationinbox_flutter_example/Utils/Constants.dart';
 
 class CustomCell extends StatefulWidget {
   final String title;
@@ -26,7 +28,7 @@ class CustomCell extends StatefulWidget {
 class _CustomCellState extends State<CustomCell> {
   String status = "";
   Map<String, dynamic> inboxMessage = {};
-  final _weNotificationinboxFlutterPlugin = WENotificationinboxFlutter();
+  final _weNotificationInboxFlutterPlugin = WENotificationinboxFlutter();
 
   @override
   void initState() {
@@ -34,9 +36,6 @@ class _CustomCellState extends State<CustomCell> {
     status = widget.status;
     inboxMessage = Map.from(widget.inboxMessage);
   }
-
-  @override
-  bool get wantKeepAlive => true; // Ensure the widget is kept alive
 
   @override
   Widget build(BuildContext context) {
@@ -49,54 +48,49 @@ class _CustomCellState extends State<CustomCell> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0), // Rounded corners
+        borderRadius: BorderRadius.circular(12.0),
       ),
-      color: Colors.grey[300], // Slightly lighter grey for the card background
+      color: Colors.grey[300],
       child: InkWell(
-        // TODO Check onTap and remove if not required
-        onTap: () {
-          // Handle card tap action here
-        },
         child: Padding(
-          padding: EdgeInsets.all(16.0), // Add padding for spacing
+          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 widget.title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 8), // Add spacing below title
+              SizedBox(height: 8),
               Text(
                 widget.description,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.black54,
                 ),
               ),
-              SizedBox(height: 8), // Add spacing below description
+              SizedBox(height: 8),
               Text(
                 'Experiment ID: ${widget.experimentId}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14.0,
                   color: Colors.black54,
                 ),
               ),
               Text(
                 'Status: ${status}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14.0,
                   color: Colors.black54,
                 ),
               ),
-              SizedBox(height: 16), // Add spacing between details and buttons
+              const SizedBox(height: 16),
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceAround, // Center buttons
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
                     onPressed: () {
@@ -105,12 +99,11 @@ class _CustomCellState extends State<CustomCell> {
                           : trackRead(context);
                     },
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.blue), // Blue button
+                      backgroundColor: MaterialStateProperty.all(Colors.blue),
                     ),
                     child: Text(
-                      status.toLowerCase() == "read" ? 'UNREAD' : 'READ',
-                      style: TextStyle(
+                      status.toLowerCase() == "read" ? UNREAD : READ,
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
@@ -120,11 +113,10 @@ class _CustomCellState extends State<CustomCell> {
                       trackClick(context);
                     },
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.blue), // Blue button
+                      backgroundColor: MaterialStateProperty.all(Colors.blue),
                     ),
                     child: Text(
-                      'Click!!',
+                      CLICK,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -135,11 +127,10 @@ class _CustomCellState extends State<CustomCell> {
                       trackView(context);
                     },
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.blue), // Blue button
+                      backgroundColor: MaterialStateProperty.all(Colors.blue),
                     ),
                     child: Text(
-                      'View',
+                      VIEW,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -150,11 +141,10 @@ class _CustomCellState extends State<CustomCell> {
                       trackDelete(context);
                     },
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.blue), // Blue button
+                      backgroundColor: MaterialStateProperty.all(Colors.blue),
                     ),
-                    child: Text(
-                      'Delete',
+                    child: const Text(
+                      DELETE,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -170,56 +160,40 @@ class _CustomCellState extends State<CustomCell> {
   }
 
   void trackClick(BuildContext context) {
-    _weNotificationinboxFlutterPlugin.trackClick(inboxMessage);
+    _weNotificationInboxFlutterPlugin.trackClick(inboxMessage);
     showAlertDialog(context, "Click tracked",
         "Click has been tracked for this notification.");
   }
 
   void trackView(BuildContext context) {
-    _weNotificationinboxFlutterPlugin.trackView(inboxMessage);
+    _weNotificationInboxFlutterPlugin.trackView(inboxMessage);
     showAlertDialog(context, "View tracked",
         "View has been tracked for this notification.");
   }
 
   void trackDelete(BuildContext context) {
-    _weNotificationinboxFlutterPlugin.markDelete(inboxMessage);
+    _weNotificationInboxFlutterPlugin.markDelete(inboxMessage);
     showAlertDialog(context, "Marked as Deleted",
         "This notification has been marked as deleted.");
   }
 
   void trackRead(BuildContext context) {
-    print(
-        "AKC: Current Status $status \n marking it as : READ \n inboxMessage.status ${inboxMessage["status"]}");
-    print("-----------------------------------------------");
-
-    _weNotificationinboxFlutterPlugin.markRead(inboxMessage);
-    widget.updateStatus("READ");
-
+    WELogger.v(
+        "MarkRead \nCurrent Status $status \n marking it as : READ \n inboxMessage.status ${inboxMessage["status"]}");
+    _weNotificationInboxFlutterPlugin.markRead(inboxMessage);
+    widget.updateStatus(READ);
     setState(() {
-      // status = "READ";
-      inboxMessage["status"] = "READ";
+      inboxMessage["status"] = READ;
     });
-
-    // showAlertDialog(context, "Marked as Read",
-    //     "This notification has been marked as read.");
-    // status = "UNREAD";
   }
 
   void trackUnread(BuildContext context) {
-    print(
-        "AKC: Current Status $status \n marking it as : UNREAD \n inboxMessage.status ${inboxMessage["status"]}");
-    print("-----------------------------------------------");
-
-    _weNotificationinboxFlutterPlugin.markUnread(inboxMessage);
-    widget.updateStatus("UNREAD");
-
-    // showAlertDialog(context, "Marked as Unread",
-    //     "This notification has been marked as unread.");
-    // status = "READ";
-
+    WELogger.v(
+        "MarkUnRead \n Current Status $status \n marking it as : UNREAD \n inboxMessage.status ${inboxMessage["status"]}");
+    _weNotificationInboxFlutterPlugin.markUnread(inboxMessage);
+    widget.updateStatus(UNREAD);
     setState(() {
-      // status = "UNREAD";
-      inboxMessage["status"] = "UNREAD";
+      inboxMessage["status"] = UNREAD;
     });
   }
 
@@ -232,7 +206,7 @@ class _CustomCellState extends State<CustomCell> {
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text("OK"),
+              child: Text(OK),
               onPressed: () {
                 Navigator.of(context).pop();
               },

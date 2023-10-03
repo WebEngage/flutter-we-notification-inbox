@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:we_notificationinbox_flutter/utils/WELogger.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
+import 'package:we_notificationinbox_flutter_example/Utils/Constants.dart';
 import '../Models/CustomCell.dart';
 import '../Models/cell_model.dart';
 
@@ -13,7 +14,7 @@ class NotificationInbox extends StatefulWidget {
 }
 
 class _NotificationInboxState extends State<NotificationInbox> {
-  final _weNotificationinboxFlutterPlugin = WENotificationinboxFlutter();
+  final _weNotificationInboxFlutterPlugin = WENotificationinboxFlutter();
   List<dynamic> _notificationList = [];
   List<CellData> cellDataList = [];
   bool _hasNextPage = false;
@@ -24,21 +25,14 @@ class _NotificationInboxState extends State<NotificationInbox> {
   void initState() {
     super.initState();
     fetchNotificationList();
-    // Add a listener to the ScrollController
     _scrollController.addListener(() {
-      // Check if we have reached the end of the list
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        // This means we have scrolled to the end of the list
-        // You can perform your desired action here.
-        // print("Reached the last cell!!!!!!!!");
         if (_hasNextPage) {
           setState(() {
             _isLoading = true;
           });
           fetchNext();
-        } else {
-          print("========End of the List=========");
         }
       }
     });
@@ -47,30 +41,9 @@ class _NotificationInboxState extends State<NotificationInbox> {
   Future<void> fetchNotificationList() async {
     try {
       var notificationList =
-          await _weNotificationinboxFlutterPlugin.getNotificationList();
-      WELogger.v("WebEngage AKC: fetch list - $notificationList");
+          await _weNotificationInboxFlutterPlugin.getNotificationList();
+      WELogger.v("List of Notifications - $notificationList");
       handleSuccess(notificationList);
-    } catch (error) {
-      throw error;
-    } finally {
-      setState(() {
-        _isLoading = false; // Fetching is complete, set loading to false
-      });
-    }
-  }
-
-  Future<void> fetchNext() async {
-    Map<String, dynamic> notificationList;
-    // var offset = _notificationList[0];
-    var offset = _notificationList[_notificationList.length - 1];
-    WELogger.v("WebEngage List Fetching with offset - $offset");
-
-    try {
-      notificationList = await _weNotificationinboxFlutterPlugin
-          .getNotificationList(offsetJSON: offset);
-      WELogger.v("WebEngage List with offset - $notificationList");
-
-      handleSuccess(notificationList, isFetchMore: true);
     } catch (error) {
       rethrow;
     } finally {
@@ -80,8 +53,25 @@ class _NotificationInboxState extends State<NotificationInbox> {
     }
   }
 
+  Future<void> fetchNext() async {
+    Map<String, dynamic> notificationList;
+    var offset = _notificationList[_notificationList.length - 1];
+
+    try {
+      notificationList = await _weNotificationInboxFlutterPlugin
+          .getNotificationList(offsetJSON: offset);
+      WELogger.v("List of Notifications from fetch next - $notificationList");
+      handleSuccess(notificationList, isFetchMore: true);
+    } catch (error) {
+      rethrow;
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   void updateCellDataList(int index, String newStatus) {
-    // print("AKC: updateCellDataList - ${cellDataList[index].status} to $newStatus");
     setState(() {
       _notificationList[index]["status"] = newStatus;
     });
@@ -100,15 +90,15 @@ class _NotificationInboxState extends State<NotificationInbox> {
             itemBuilder: (BuildContext context) => [
               const PopupMenuItem<String>(
                 value: 'readAll',
-                child: Text('Read All'),
+                child: Text(READ_ALL),
               ),
               const PopupMenuItem<String>(
                 value: 'unreadAll',
-                child: Text('Unread All'),
+                child: Text(UNREAD_ALL),
               ),
               const PopupMenuItem<String>(
                 value: 'deleteAll',
-                child: Text('Delete All'),
+                child: Text(DELETE_ALL),
               ),
             ],
           ),
@@ -143,14 +133,13 @@ class _NotificationInboxState extends State<NotificationInbox> {
           else if (_isLoading)
             Container(
               color: Colors.black.withOpacity(0.5),
-              // Semi-transparent background
               child: const Center(
                 child: CircularProgressIndicator(),
               ),
             )
           else if (!_isLoading)
             const Center(
-              child: Text("Sorry! You don't have any List available!"),
+              child: Text("Sorry! You don't have any Message available!"),
             ),
           if (_isLoading && _notificationList.isNotEmpty)
             Positioned(
@@ -162,15 +151,13 @@ class _NotificationInboxState extends State<NotificationInbox> {
                       color: Colors.black.withOpacity(0.1),
                       child: Center(
                         child: Transform.scale(
-                          scale:
-                              2.0, // Increase the scale value to increase the size
+                          scale: 2.0,
                           child: CircularProgressIndicator(),
                         ),
                       ),
                     )
                   : const SizedBox
-                      .shrink(), // Hide the spinner when not loading
-              // Hide the spinner when not loading
+                      .shrink(), // Hides the spinner when not loading
             ),
         ],
       ),
@@ -192,38 +179,29 @@ class _NotificationInboxState extends State<NotificationInbox> {
   void handleMenuItemSelected(BuildContext context, String value) {
     switch (value) {
       case 'readAll':
-        var _cloneNotificationList = _notificationList;
-        _weNotificationinboxFlutterPlugin.readAll(_notificationList);
-
-        // for(var i=0; i<cellDataList.length;i++) {
-        //   updateCellDataList(i,"read");
-        // }
-        for (var i = 0; i < _cloneNotificationList.length; i++) {
-          print("AKC NI ${_cloneNotificationList[i]["status"]}");
-          _cloneNotificationList[i]["status"] = "READ";
+        var cloneNotificationList = _notificationList;
+        _weNotificationInboxFlutterPlugin.readAll(_notificationList);
+        for (var i = 0; i < cloneNotificationList.length; i++) {
+          cloneNotificationList[i]["status"] = READ;
         }
         setState(() {
-          _notificationList = _cloneNotificationList;
+          _notificationList = cloneNotificationList;
         });
         break;
+
       case 'unreadAll':
         var _cloneNotificationList = _notificationList;
-        _weNotificationinboxFlutterPlugin.unReadAll(_notificationList);
-        // for(var i=0; i<cellDataList.length;i++) {
-        //   updateCellDataList(i,"unread");
-        // }
-
+        _weNotificationInboxFlutterPlugin.unReadAll(_notificationList);
         for (var i = 0; i < _cloneNotificationList.length; i++) {
-          print("AKC NI ${_cloneNotificationList[i]["status"]}");
-
-          _cloneNotificationList[i]["status"] = "UNREAD";
+          _cloneNotificationList[i]["status"] = UNREAD;
         }
         setState(() {
           _notificationList = _cloneNotificationList;
         });
         break;
+
       case 'deleteAll':
-        _weNotificationinboxFlutterPlugin.deleteAll(_notificationList);
+        _weNotificationInboxFlutterPlugin.deleteAll(_notificationList);
         break;
     }
   }

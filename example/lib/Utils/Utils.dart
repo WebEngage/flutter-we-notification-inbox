@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:we_notificationinbox_flutter_example/Utils/Constants.dart';
 
 class Utils {
   static SharedPreferences? _prefs;
@@ -7,10 +8,6 @@ class Utils {
   static initSharedPref() async {
     _prefs ??= await SharedPreferences.getInstance();
   }
-
-  static var IS_LOGIN = "isLogin";
-  static var CUID = "cuid";
-  static var JWT = "jwt";
 
   static Future<bool> isLoggedIn() async {
     await initSharedPref();

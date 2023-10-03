@@ -1,15 +1,15 @@
-import 'dart:ffi';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:we_notificationinbox_flutter/utils/WELogger.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
 import 'package:we_notificationinbox_flutter_example/Screens/notification_inbox.dart';
+import 'package:we_notificationinbox_flutter_example/Utils/Constants.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 import 'Utils/Utils.dart';
 import 'Widgets/Button.dart';
-import 'Widgets/Edittext.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,27 +22,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: APP_TITLE,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Notification Inbox'),
+      home: const MyHomePage(title: APP_TITLE),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title});
 
   final String title;
-  final _weNotificationinboxFlutterPlugin = WENotificationinboxFlutter();
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _weNotificationinboxFlutterPlugin = WENotificationinboxFlutter();
+  final _weNotificationInboxFlutterPlugin = WENotificationinboxFlutter();
   int _notificationCount = 0;
   var _cuidValue = "";
   var _jwt = "";
@@ -51,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    WebEngagePlugin _webenagePlugin = WebEngagePlugin();
     WENotificationInbox().init(enableLogs: true);
     initSharedPref();
     _init();
@@ -75,25 +73,26 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> getNotificationCount() async {
-    String NotificationCount;
+    String notificationCount = "0";
     try {
-      NotificationCount =
-          await _weNotificationinboxFlutterPlugin.getNotificationCount();
+      notificationCount =
+          await _weNotificationInboxFlutterPlugin.getNotificationCount();
     } on PlatformException {
-      NotificationCount = 'Failed to get platform version.';
+      WELogger.e("Exception occurred while getting platform version");
     }
     if (!mounted) return;
 
+    // Updates count in success case
     setState(() {
-      _notificationCount = int.parse(NotificationCount);
+      _notificationCount = int.parse(notificationCount);
     });
   }
 
   Future<void> resetNotificationCount() async {
     try {
-      await _weNotificationinboxFlutterPlugin.resetNotificationCount();
+      await _weNotificationInboxFlutterPlugin.resetNotificationCount();
     } catch (error) {
-      throw error;
+      rethrow;
     }
     if (!mounted) return;
 
@@ -103,7 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _login() {
-    // TODO - Test JWT feature with actual JWT lc
     if (_cuidValue.isNotEmpty) {
       _isLoggedIn = true;
       if (_jwt.isNotEmpty) {
@@ -129,10 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
     Utils.setIsLoggedIn(false);
   }
 
-  void _getCount() {
-    getNotificationCount();
-  }
-
   void _onValueChange(value) {
     _cuidValue = value;
   }
@@ -142,9 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   NotificationInbox _navigateToNotificationInbox() {
-    print("AKC: printing before navigating");
     resetNotificationCount();
-    return NotificationInbox();
+    return const NotificationInbox();
   }
 
   @override
@@ -216,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     padding: EdgeInsets.all(16.0),
                                     child: Text(
                                       'Welcome $_cuidValue,',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color.fromRGBO(100, 145, 222, 1),
                                         fontStyle: FontStyle.italic,
                                         fontSize: 20,
@@ -225,18 +218,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   ),
                                 ),
-                                Spacer(), // Push the following widgets to the right
+                                const Spacer(),
                                 Align(
                                   alignment: Alignment.topRight,
                                   child: Container(
                                     padding: EdgeInsets.all(16.0),
                                     child:
-                                        CustomWidgets.button("Logout", _logout),
+                                        CustomWidgets.button(LOGOUT, _logout),
                                   ),
                                 ),
                               ],
                             ),
-                            // Add images in a ListView for scrolling
                             ListView(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -283,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           SizedBox(height: 20.0),
                           ElevatedButton(
                             onPressed: _login,
-                            child: Text("Login"),
+                            child: Text(LOGIN),
                           ),
                         ],
                       ),

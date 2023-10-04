@@ -20,8 +20,9 @@ public class WeNotificationinboxFlutterPlugin: NSObject, FlutterPlugin {
         case WEConstants.METHOD_NAME_GET_NOTIFICATION_LIST:
             if let args = call.arguments as? [String: Any?],let offsetJSON = args[WEConstants.OFFSETJSON] as? String {
                 getNotificationList(offsetJSON, result: result)
+            } else {
+                getNotificationList(result: result)
             }
-            getNotificationList(result: result)  
         case WEConstants.METHOD_NAME_MARK_READ:
             if let readMap = call.arguments as? NSDictionary {
                 markRead(readMap)
@@ -151,7 +152,7 @@ public class WeNotificationinboxFlutterPlugin: NSObject, FlutterPlugin {
         let jsonString = convertToJsonString(jsonArray: jsonArray)
         let apiResponse: [String: Any] = [WEConstants.HASNEXT: response.hasNextPage, WEConstants.MESSAGELIST: jsonString]
         result(apiResponse)
-        
+
     }
 
     func convertToJsonString(jsonArray: Any) -> String {

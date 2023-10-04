@@ -7,19 +7,18 @@ import 'we_notificationinbox_flutter_platform_interface.dart';
 import '../utils/Constants.dart';
 import '../utils/WELogger.dart';
 
-/// An implementation of [WeNotificationinboxFlutterPlatform] that uses method channels.
 class MethodChannelWeNotificationinboxFlutter
     extends WeNotificationinboxFlutterPlatform {
-  /// The method channel used to interact with the native platform.
+  // The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel =
       const MethodChannel(METHOD_CHANNEL_WE_NOTIFICATIONINBOX_FLUTTER);
 
   @override
   Future<bool> initNotificationInbox() async {
-    WELogger.v("WE NI MethodChannel init Notification Inbox");
     final registered = await methodChannel
         .invokeMethod<dynamic>(METHOD_NAME_INIT_NOTIFICATION_INBOX, {});
+    WELogger.v("Notification Inbox Initialized");
     return registered as bool;
   }
 
@@ -30,15 +29,13 @@ class MethodChannelWeNotificationinboxFlutter
           await methodChannel.invokeMethod(METHOD_NAME_GET_NOTIFICATION_COUNT);
       return result;
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 
   @override
   Future<dynamic> getNotificationList({dynamic offsetJSON}) async {
     try {
-      WELogger.v("JSON offset passed to Native- $offsetJSON");
-      // TODO - check if this is creating issue for iOS
       String jsonString = jsonEncode(offsetJSON);
       final dynamic result = await methodChannel.invokeMethod(
           METHOD_NAME_GET_NOTIFICATION_LIST, {OFFSETJSON: jsonString});
@@ -47,8 +44,8 @@ class MethodChannelWeNotificationinboxFlutter
         return response;
       }
     } catch (error) {
-      WELogger.e('Error in NotficationListResponse - $error');
-      throw error;
+      WELogger.e('Error in Notification ListResponse - $error');
+      rethrow;
     }
   }
 
@@ -144,12 +141,6 @@ class MethodChannelWeNotificationinboxFlutter
   }
 
   dynamic notificationListResponse(dynamic result) {
-    var ml = result[MESSAGELIST];
-    var mlStr = result[MESSAGELIST] as String;
-    WELogger.v('notificationListResponse received result-$result');
-    WELogger.v('notificationListResponse received result[ml] -$ml');
-    WELogger.v('notificationListResponse received mlStr-$mlStr');
-    // WELogger.v('notificationListResponse received mlStr-$mlStr');
     Map<String, dynamic> responseData = {};
     final messageString = result[MESSAGELIST] as String;
     final hasNextPage = result[HASNEXT] as bool;
@@ -158,7 +149,7 @@ class MethodChannelWeNotificationinboxFlutter
       responseData[MESSAGELIST] = messageList;
       responseData[HASNEXT] = hasNextPage;
     }
-    WELogger.v('notificationList -$responseData');
+    WELogger.v('notificationList Response -$responseData');
     return responseData;
   }
 }

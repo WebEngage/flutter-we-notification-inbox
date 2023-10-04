@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:we_notificationinbox_flutter/utils/WELogger.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
 import 'package:we_notificationinbox_flutter_example/Utils/Constants.dart';
 import '../Models/CustomCell.dart';
@@ -42,7 +41,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
     try {
       var notificationList =
           await _weNotificationInboxFlutterPlugin.getNotificationList();
-      WELogger.v("List of Notifications - $notificationList");
       handleSuccess(notificationList);
     } catch (error) {
       rethrow;
@@ -60,7 +58,6 @@ class _NotificationInboxState extends State<NotificationInbox> {
     try {
       notificationList = await _weNotificationInboxFlutterPlugin
           .getNotificationList(offsetJSON: offset);
-      WELogger.v("List of Notifications from fetch next - $notificationList");
       handleSuccess(notificationList, isFetchMore: true);
     } catch (error) {
       rethrow;

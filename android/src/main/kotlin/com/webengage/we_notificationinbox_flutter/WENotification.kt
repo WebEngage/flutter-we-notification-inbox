@@ -1,7 +1,6 @@
 package com.webengage.we_notificationinbox_flutter
 
 import android.content.Context
-import android.util.Log
 import com.webengage.notification.inbox.WENotificationInbox.Companion.get
 import com.webengage.notification.inbox.callbacks.WEInboxCallback
 import com.webengage.notification.inbox.data.models.PushNotificationTemplateData
@@ -21,25 +20,20 @@ class WENotification : WEInboxCallback<WEInboxData> {
     private var listResultCallback: MethodChannel.Result? = null
     var helper = getInstance()
 
-    init {
-        // Constructor/ Initialization
-    }
 
     fun initialization() {
-        // NO Initialization available for Android NI
-        Log.d("WebEngage", "AKC: Initialization of WENotificationInbox")
+        // Available for Future Initialization
+        // Should work without Initialization as well
     }
 
     fun attachContext(flutterContext: Context) {
         context = flutterContext
-
     }
 
     fun getNotificationCount(result: MethodChannel.Result) {
-        Log.d("WebEngage", "AKC: getNotificationCount of WENotificationInbox")
         get(context).getUserNotificationCount(context, object : WEInboxCallback<String> {
             override fun onSuccess(counter: String) {
-                Logger.d(Constants.TAG, "count - getWENotificationCount : $counter")
+                Logger.d("WebEngage-inbox"," count - "+counter);
                 result.success(counter)
             }
 
@@ -49,17 +43,6 @@ class WENotification : WEInboxCallback<WEInboxData> {
             }
 
         })
-//        get(context).getUserNotificationCount(context, object : WEInboxCallback<String?> {
-//            override fun onSuccess(counter: String?) {
-//                Logger.d(Constants.TAG,"count - getWENotificationCount : $counter")
-//                result.success(counter)
-//            }
-//
-//            override fun onError(errorCode: Int, error: Map<String, Any?>) {
-//                Logger.e(Constants.TAG,"count - error: $errorCode while fetching Count \n$error")
-//                result.error(errorCode.toString(), "Error!", error)
-//            }
-//        })
     }
 
     @Throws(JSONException::class)
@@ -96,82 +79,59 @@ class WENotification : WEInboxCallback<WEInboxData> {
         )
     }
 
-
-    // TODO - Check if this can be moved to the NotificationInbox-core library of andorid
     fun getNotificationList(hashMap: HashMap<String, *>, result: MethodChannel.Result) {
-        Log.d(Constants.TAG, "List - getNotificationList of WENotificationInbox $hashMap")
         listResultCallback = result
-
         val jsonString: String? = hashMap["offsetJSON"] as String
 
         if (jsonString == null || jsonString == "null") {
-            Logger.e(Constants.TAG, "LIST: if json is null!!!")
             get(context).getNotificationList(context, this)
         } else {
-            Logger.d(Constants.TAG, "LIST: else jsonString - $jsonString")
-
             val jsonObject: JSONObject = JSONObject(jsonString)
             val weInboxMessage: WEInboxMessage = convertToWEInboxMessage(
                 jsonObject
             )
             // call api with offset
             get(context).getNotificationList(context, weInboxMessage, this)
-            Logger.d(
-                Constants.TAG,
-                "LIST: converted to WEInboxMessage - ${weInboxMessage.variationId}"
-            )
         }
     }
 
     fun markRead(hashMap: HashMap<String, String>) {
-        Log.d("WebEngage", "AKC: markRead of WENotificationInbox")
         helper.handleInboxEvent(Constants.METHOD_NAME_MARK_READ, hashMap)
     }
 
     fun markUnread(hashMap: HashMap<String, String>) {
-        Log.d("WebEngage", "AKC: markUnread of WENotificationInbox")
         helper.handleInboxEvent(Constants.METHOD_NAME_MARK_UNREAD, hashMap)
     }
 
     fun trackClick(hashMap: HashMap<String, String>) {
-        Log.d("WebEngage", "AKC: trackClick of WENotificationInbox")
         helper.handleInboxEvent(Constants.METHOD_NAME_TRACK_CLICK, hashMap)
     }
 
     fun trackView(hashMap: HashMap<String, String>) {
-        Log.d("WebEngage", "AKC: trackView of WENotificationInbox")
         helper.handleInboxEvent(Constants.METHOD_NAME_TRACK_VIEW, hashMap)
-
     }
 
     fun markDelete(hashMap: HashMap<String, String>) {
-        Log.d("WebEngage", "AKC: markDelete of WENotificationInbox")
         helper.handleInboxEvent(Constants.METHOD_NAME_MARK_DELETE, hashMap)
     }
 
     fun readAll(messageList: List<HashMap<String, String>>) {
-        Log.d("WebEngage", "AKC: readAll of WENotificationInbox")
         helper.handleMultipleInboxEvent(Constants.METHOD_NAME_MARK_READ, messageList)
     }
 
     fun unReadAll(messageList: List<HashMap<String, String>>) {
-        Log.d("WebEngage", "AKC: unReadAll of WENotificationInbox")
         helper.handleMultipleInboxEvent(Constants.METHOD_NAME_MARK_UNREAD, messageList)
     }
 
     fun deleteAll(messageList: List<HashMap<String, String>>) {
-        Log.d("WebEngage", "AKC: deleteAll of WENotificationInbox")
-        // TODO - Later change this to deleteAll
-        helper.handleMultipleInboxEvent(Constants.METHOD_NAME_MARK_UNREAD, messageList)
+        helper.handleMultipleInboxEvent(Constants.METHOD_NAME_DELETE_ALL, messageList)
     }
 
     fun resetNotificationCount() {
-        Log.d("WebEngage", "AKC: resetNotificationCount of WENotificationInbox")
-// TODO - uncomment this later
 //        get(context).onNotificationIconClick()
     }
 
-    private fun convertJsonToWriteableMap(weInboxData: com.webengage.notification.inbox.data.models.WEInboxData): Map<String, Any>? {
+    private fun convertJsonToWriteableMap(weInboxData: WEInboxData): Map<String, Any>? {
         val jsonArray = JSONArray()
         for (weInboxMessage in weInboxData.messageList) {
             val jsonData: JSONObject = weInboxMessage.jsonData
@@ -189,12 +149,10 @@ class WENotification : WEInboxCallback<WEInboxData> {
     }
 
     override fun onSuccess(result: WEInboxData) {
-        Logger.d(Constants.TAG, "List - getWENotificationList : ${result.toString()}")
         val dataMap: Map<String, Any>? = convertJsonToWriteableMap(result)
         if (listResultCallback == null) {
-            Logger.e(Constants.TAG, "list: listResultCallback: is null $dataMap ")
+            Logger.e(Constants.TAG, "listResultCallback: callback not attached $dataMap ")
         } else {
-            Logger.d(Constants.TAG, "list: listResultCallback: is not  null $dataMap ")
             listResultCallback?.success(dataMap)
         }
     }
@@ -202,13 +160,5 @@ class WENotification : WEInboxCallback<WEInboxData> {
     override fun onError(errorCode: Int, error: Map<String, Any?>) {
         Logger.e(Constants.TAG, "List - error: $errorCode while fetching Count \n$error")
         listResultCallback?.error(errorCode.toString(), "error_message_to_be_added", error)
-
     }
-//override fun onSuccess(result: WEInboxData) {
-//    TODO("Not yet implemented")
-//}
-//
-//override fun onError(errorCode: Int, error: Map<String, Any?>) {
-//    TODO("Not yet implemented")
-//}
 }

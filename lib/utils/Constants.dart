@@ -17,9 +17,8 @@ const OFFSETJSON = "offsetJSON";
 const MESSAGELIST = "messageList";
 const HASNEXT = "hasNext";
 
-enum STATUS {
-  READ,
-  UNREAD,
-}
+const READ_STATUS = "read";
+const UNREAD_STATUS = "unread";
+
 
 

@@ -9,7 +9,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
-class WeNotificationinboxFlutterPlugin : FlutterPlugin, MethodCallHandler {
+class WeNotificationInboxFlutterPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
     private var weNotification = WENotification();
     private lateinit var context: Context;
@@ -36,15 +36,15 @@ class WeNotificationinboxFlutterPlugin : FlutterPlugin, MethodCallHandler {
                 result
             )
 
-            Constants.METHOD_NAME_MARK_READ -> weNotification.markRead(call.arguments as HashMap<String, String>)
-            Constants.METHOD_NAME_MARK_UNREAD -> weNotification.markUnread(call.arguments as HashMap<String, String>)
-            Constants.METHOD_NAME_TRACK_CLICK -> weNotification.trackClick(call.arguments as HashMap<String, String>)
-            Constants.METHOD_NAME_TRACK_VIEW -> weNotification.trackView(call.arguments as HashMap<String, String>)
-            Constants.METHOD_NAME_MARK_DELETE -> weNotification.markDelete(call.arguments as HashMap<String, String>)
-            Constants.METHOD_NAME_READ_ALL -> weNotification.readAll(call.arguments as List<HashMap<String, String>>)
-            Constants.METHOD_NAME_UNREAD_ALL -> weNotification.unReadAll(call.arguments as List<HashMap<String, String>>)
-            Constants.METHOD_NAME_DELETE_ALL -> weNotification.deleteAll(call.arguments as List<HashMap<String, String>>)
-            Constants.METHOD_NAME_RESET_NOTIFICATION_COUNT -> weNotification.resetNotificationCount()
+            Constants.METHOD_NAME_MARK_READ -> weNotification.markRead(call.arguments as HashMap<String, String>, result)
+            Constants.METHOD_NAME_MARK_UNREAD -> weNotification.markUnread(call.arguments as HashMap<String, String>, result)
+            Constants.METHOD_NAME_TRACK_CLICK -> weNotification.trackClick(call.arguments as HashMap<String, String>, result)
+            Constants.METHOD_NAME_TRACK_VIEW -> weNotification.trackView(call.arguments as HashMap<String, String>, result)
+            Constants.METHOD_NAME_MARK_DELETE -> weNotification.markDelete(call.arguments as HashMap<String, String>, result)
+            Constants.METHOD_NAME_READ_ALL -> weNotification.readAll(call.arguments as List<HashMap<String, String>>, result)
+            Constants.METHOD_NAME_UNREAD_ALL -> weNotification.unReadAll(call.arguments as List<HashMap<String, String>>, result)
+            Constants.METHOD_NAME_DELETE_ALL -> weNotification.deleteAll(call.arguments as List<HashMap<String, String>>, result)
+            Constants.METHOD_NAME_RESET_NOTIFICATION_COUNT -> weNotification.resetNotificationCount(result)
             else -> result.notImplemented()
         }
     }

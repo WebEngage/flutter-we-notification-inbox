@@ -14,48 +14,60 @@ class WENotificationInbox {
     WeNotificationinboxFlutterPlatform.instance.initNotificationInbox();
   }
 
-  Future<String> getNotificationCount() {
-    return WeNotificationinboxFlutterPlatform.instance.getNotificationCount();
+  Future<dynamic> getNotificationCount() async{
+    var countMethod = await WeNotificationinboxFlutterPlatform.instance.getNotificationCount();
+    return countMethod;
   }
 
   Future<dynamic> getNotificationList({dynamic offsetJSON}) async {
-    return WeNotificationinboxFlutterPlatform.instance
+    var listMethod = await WeNotificationinboxFlutterPlatform.instance
         .getNotificationList(offsetJSON: offsetJSON);
+    return listMethod;
+
   }
 
-  Future<void> markRead(Map<String, dynamic> readMap) async {
-    WeNotificationinboxFlutterPlatform.instance.markRead(readMap);
+  Future<dynamic> markRead(Map<String, dynamic> readMap) async {
+    var readEvent = await WeNotificationinboxFlutterPlatform.instance.markRead(readMap);
+    return readEvent;
   }
 
-  Future<void> markUnread(Map<String, dynamic> readMap) async {
-    WeNotificationinboxFlutterPlatform.instance.markUnread(readMap);
+  Future<dynamic> markUnread(Map<String, dynamic> readMap) async {
+    var unReadEvent = await WeNotificationinboxFlutterPlatform.instance.markUnread(readMap);
+    return unReadEvent;
   }
 
-  Future<void> trackClick(Map<String, dynamic> readMap) async {
-    WeNotificationinboxFlutterPlatform.instance.trackClick(readMap);
+  Future<dynamic> trackClick(Map<String, dynamic> readMap) async {
+    var clickEvent = await WeNotificationinboxFlutterPlatform.instance.trackClick(readMap);
+    return clickEvent;
   }
 
-  Future<void> trackView(Map<String, dynamic> readMap) async {
-    WeNotificationinboxFlutterPlatform.instance.trackView(readMap);
+  Future<dynamic> trackView(Map<String, dynamic> readMap) async {
+   var viewEvent = await WeNotificationinboxFlutterPlatform.instance.trackView(readMap);
+   return viewEvent;
   }
 
-  Future<void> markDelete(Map<String, dynamic> readMap) async {
-    WeNotificationinboxFlutterPlatform.instance.markDelete(readMap);
+  Future<dynamic> markDelete(Map<String, dynamic> readMap) async {
+    var deleteEvent = await WeNotificationinboxFlutterPlatform.instance.markDelete(readMap);
+    return deleteEvent;
   }
 
-  Future<void> readAll(List<dynamic> notificationList) async {
-    WeNotificationinboxFlutterPlatform.instance.readAll(notificationList);
+  Future<dynamic> readAll(List<dynamic> notificationList) async {
+   var readAllEvent = await WeNotificationinboxFlutterPlatform.instance.readAll(notificationList);
+   return readAllEvent;
   }
 
-  Future<void> unReadAll(List<dynamic> notificationList) async {
-    WeNotificationinboxFlutterPlatform.instance.unReadAll(notificationList);
+  Future<dynamic> unReadAll(List<dynamic> notificationList) async {
+    var unreadAllEvent = WeNotificationinboxFlutterPlatform.instance.unReadAll(notificationList);
+    return unreadAllEvent;
   }
 
-  Future<void> deleteAll(List<dynamic> notificationList) async {
-    WeNotificationinboxFlutterPlatform.instance.deleteAll(notificationList);
+  Future<dynamic> deleteAll(List<dynamic> notificationList) async {
+    var deleteAllEvent = await WeNotificationinboxFlutterPlatform.instance.deleteAll(notificationList);
+    return deleteAllEvent;
   }
 
-  Future<void> resetNotificationCount() async {
-    WeNotificationinboxFlutterPlatform.instance.resetNotificationCount();
+  Future<dynamic> resetNotificationCount() async {
+    var resetCount = await WeNotificationinboxFlutterPlatform.instance.resetNotificationCount();
+    return resetCount;
   }
 }

@@ -15,15 +15,14 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class WENotification : WEInboxCallback<WEInboxData> {
+class WENotification {
     private lateinit var context: Context;
-    private var listResultCallback: MethodChannel.Result? = null
     var helper = getInstance()
 
 
     fun initialization() {
-        // Available for Future Initialization
-        // Should work without Initialization as well
+        // Available for Future Initialization (iOS - version tracking)
+        // Android - Should work without Initialization as well
     }
 
     fun attachContext(flutterContext: Context) {
@@ -41,94 +40,146 @@ class WENotification : WEInboxCallback<WEInboxData> {
                 Logger.e(Constants.TAG, "count - error: $errorCode while fetching Count \n$error")
                 result.error(errorCode.toString(), "Error!", error)
             }
-
         })
     }
 
-    @Throws(JSONException::class)
-    fun convertToWEInboxMessage(jsonObject: JSONObject): WEInboxMessage {
-        var childExperimentId: String? = ""
-        var childVariationId: String? = ""
-        val experimentId = jsonObject.getString("experimentId")
-        val variationId = jsonObject.getString("variationId")
-        val status = jsonObject.getString("status")
-        val channelType = jsonObject.getString("channelType")
-        val creationTime = jsonObject.getString("creationTime")
-        val scope = jsonObject.getString("scope")
-        val category = jsonObject.getString("category")
-        if (jsonObject.has("childExperimentId")) {
-            childExperimentId = jsonObject.getString("childExperimentId")
-        }
-        if (jsonObject.has("childVariationId")) {
-            childVariationId = jsonObject.getString("childVariationId")
-        }
-        val resultMap = toMap(jsonObject.getJSONObject("message"))
-        val msg: WEInboxMessageData = PushNotificationTemplateData(java.util.HashMap(resultMap))
-        return WEInboxMessage(
-            experimentId,
-            variationId,
-            status,
-            channelType,
-            childExperimentId,
-            childVariationId,
-            creationTime,
-            scope,
-            category,
-            msg,
-            jsonObject
-        )
+
+    private fun convertToWEInboxMessage(jsonObject: JSONObject): WEInboxMessage {
+
+            var childExperimentId: String? = ""
+            var childVariationId: String? = ""
+
+            val experimentId = jsonObject.getString("experimentId1") ?: ""
+            val variationId = jsonObject.getString("variationId") ?: ""
+            val status = jsonObject.getString("status1") ?: ""
+            val channelType = jsonObject.getString("channelType") ?: ""
+            val creationTime = jsonObject.getString("creationTime") ?: ""
+            val scope = jsonObject.getString("scope") ?: ""
+            val category = jsonObject.getString("category") ?: ""
+            if (jsonObject.has("childExperimentId")) {
+                childExperimentId = jsonObject.getString("childExperimentId1")
+            }
+            if (jsonObject.has("childVariationId")) {
+                childVariationId = jsonObject.getString("childVariationId")
+            }
+            val resultMap = toMap(jsonObject.getJSONObject("message1"))
+            val msg: WEInboxMessageData = PushNotificationTemplateData(java.util.HashMap(resultMap))
+            return WEInboxMessage(
+                experimentId,
+                variationId,
+                status,
+                channelType,
+                childExperimentId,
+                childVariationId,
+                creationTime,
+                scope,
+                category,
+                msg,
+                jsonObject
+            )
     }
 
     fun getNotificationList(hashMap: HashMap<String, *>, result: MethodChannel.Result) {
-        listResultCallback = result
-        val jsonString: String? = hashMap["offsetJSON"] as String
+        val jsonString: String? = hashMap["offsetJSON"] as? String
 
         if (jsonString == null || jsonString == "null") {
-            get(context).getNotificationList(context, this)
+            get(context).getNotificationList(context, object : WEInboxCallback<WEInboxData> {
+                override fun onSuccess(listData: WEInboxData) {
+                    val dataMap: Map<String, Any>? = convertJsonToWriteableMap(listData)
+                    if (result == null) {
+                        Logger.e(Constants.TAG, "result: callback not attached $dataMap ")
+                    } else {
+                        result?.success(dataMap)
+                    }
+                }
+
+                override fun onError(errorCode: Int, error: Map<String, Any?>) {
+                    Logger.e(Constants.TAG, "List - error: $errorCode while fetching Count \n$error")
+                    result?.error(errorCode.toString(), "Error Accessing Initial notification list ", error)
+                }
+            })
         } else {
-            val jsonObject: JSONObject = JSONObject(jsonString)
-            val weInboxMessage: WEInboxMessage = convertToWEInboxMessage(
-                jsonObject
-            )
-            // call api with offset
-            get(context).getNotificationList(context, weInboxMessage, this)
+            try {
+                val jsonObject: JSONObject = JSONObject(jsonString)
+                val weInboxMessage: WEInboxMessage = convertToWEInboxMessage(
+                    jsonObject
+                )
+
+                // call api with offset
+                get(context).getNotificationList(
+                    context,
+                    weInboxMessage,
+                    object : WEInboxCallback<WEInboxData> {
+                        override fun onSuccess(listData: WEInboxData) {
+                            val dataMap: Map<String, Any>? = convertJsonToWriteableMap(listData)
+                            if (result == null) {
+                                Logger.e(Constants.TAG, "result: callback not attached $dataMap ")
+                            } else {
+                                result?.success(dataMap)
+                            }
+                        }
+
+                        override fun onError(errorCode: Int, error: Map<String, Any?>) {
+                            Logger.e(
+                                Constants.TAG,
+                                "List - error: $errorCode while fetching Notification List \n$error"
+                            )
+
+                            result?.error(errorCode.toString(), "Error while fetching Notification List", error)
+                        }
+                    })
+            } catch (e: Exception) {
+                val emptyErrorMap = emptyMap<String, Any?>()
+                Logger.e(Constants.TAG, "Exception while parsing json data to WEInboxData $e")
+                result?.error("Exception occurred", "Exception while parsing JSON data", emptyErrorMap);
+            }
         }
     }
 
-    fun markRead(hashMap: HashMap<String, String>) {
+    fun markRead(hashMap: HashMap<String, String>, result: MethodChannel.Result): Unit?  {
         helper.handleInboxEvent(Constants.METHOD_NAME_MARK_READ, hashMap)
+        return result?.success(null);
     }
 
-    fun markUnread(hashMap: HashMap<String, String>) {
+    fun markUnread(hashMap: HashMap<String, String>, result: MethodChannel.Result): Unit?  {
         helper.handleInboxEvent(Constants.METHOD_NAME_MARK_UNREAD, hashMap)
+        return result?.success(null);
     }
 
-    fun trackClick(hashMap: HashMap<String, String>) {
+    fun trackClick(hashMap: HashMap<String, String>, result: MethodChannel.Result): Unit? {
         helper.handleInboxEvent(Constants.METHOD_NAME_TRACK_CLICK, hashMap)
+        return result?.success(null);
     }
 
-    fun trackView(hashMap: HashMap<String, String>) {
+    fun trackView(hashMap: HashMap<String, String>, result: MethodChannel.Result): Unit?  {
         helper.handleInboxEvent(Constants.METHOD_NAME_TRACK_VIEW, hashMap)
+        return result?.success(null);
     }
 
-    fun markDelete(hashMap: HashMap<String, String>) {
+    fun markDelete(hashMap: HashMap<String, String>, result: MethodChannel.Result): Unit?  {
         helper.handleInboxEvent(Constants.METHOD_NAME_MARK_DELETE, hashMap)
+        return result?.success(null);
+
     }
 
-    fun readAll(messageList: List<HashMap<String, String>>) {
+    fun readAll(messageList: List<HashMap<String, String>>, result: MethodChannel.Result): Unit?  {
         helper.handleMultipleInboxEvent(Constants.METHOD_NAME_MARK_READ, messageList)
+        return result?.success(null);
     }
 
-    fun unReadAll(messageList: List<HashMap<String, String>>) {
+    fun unReadAll(messageList: List<HashMap<String, String>>, result: MethodChannel.Result): Unit?  {
         helper.handleMultipleInboxEvent(Constants.METHOD_NAME_MARK_UNREAD, messageList)
+        return result?.success(null);
     }
 
-    fun deleteAll(messageList: List<HashMap<String, String>>) {
+    fun deleteAll(messageList: List<HashMap<String, String>>, result: MethodChannel.Result): Unit?  {
         helper.handleMultipleInboxEvent(Constants.METHOD_NAME_DELETE_ALL, messageList)
+        return result?.success(null);
     }
 
-    fun resetNotificationCount() {
-//        get(context).onNotificationIconClick()
+    fun resetNotificationCount(result: MethodChannel.Result): Unit? {
+        get(context).onNotificationIconClick()
+        return result?.success(null);
     }
 
     private fun convertJsonToWriteableMap(weInboxData: WEInboxData): Map<String, Any>? {
@@ -148,17 +199,4 @@ class WENotification : WEInboxCallback<WEInboxData> {
         )
     }
 
-    override fun onSuccess(result: WEInboxData) {
-        val dataMap: Map<String, Any>? = convertJsonToWriteableMap(result)
-        if (listResultCallback == null) {
-            Logger.e(Constants.TAG, "listResultCallback: callback not attached $dataMap ")
-        } else {
-            listResultCallback?.success(dataMap)
-        }
-    }
-
-    override fun onError(errorCode: Int, error: Map<String, Any?>) {
-        Logger.e(Constants.TAG, "List - error: $errorCode while fetching Count \n$error")
-        listResultCallback?.error(errorCode.toString(), "error_message_to_be_added", error)
-    }
 }

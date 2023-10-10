@@ -9,7 +9,6 @@ import '../utils/WELogger.dart';
 
 class MethodChannelWeNotificationinboxFlutter
     extends WeNotificationinboxFlutterPlatform {
-  // The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel =
       const MethodChannel(METHOD_CHANNEL_WE_NOTIFICATIONINBOX_FLUTTER);
@@ -57,7 +56,7 @@ class MethodChannelWeNotificationinboxFlutter
     }
 
     String status = readMap['status'] ?? "";
-    if (status.toLowerCase() != "read") {
+    if (status.toLowerCase() != READ_STATUS) {
       await methodChannel.invokeMethod(METHOD_NAME_MARK_READ, readMap);
     } else {
       WELogger.e("markRead - status is already read");
@@ -72,7 +71,7 @@ class MethodChannelWeNotificationinboxFlutter
     }
 
     String status = readMap['status'] ?? "";
-    if (status.toLowerCase() != "unread") {
+    if (status.toLowerCase() != UNREAD_STATUS) {
       await methodChannel.invokeMethod(METHOD_NAME_MARK_UNREAD, readMap);
     } else {
       WELogger.e("markRead - status is already unread");

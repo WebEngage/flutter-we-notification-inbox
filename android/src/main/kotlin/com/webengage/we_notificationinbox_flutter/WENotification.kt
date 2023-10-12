@@ -49,20 +49,20 @@ class WENotification {
             var childExperimentId: String? = ""
             var childVariationId: String? = ""
 
-            val experimentId = jsonObject.getString("experimentId1") ?: ""
+            val experimentId = jsonObject.getString("experimentId") ?: ""
             val variationId = jsonObject.getString("variationId") ?: ""
-            val status = jsonObject.getString("status1") ?: ""
+            val status = jsonObject.getString("status") ?: ""
             val channelType = jsonObject.getString("channelType") ?: ""
             val creationTime = jsonObject.getString("creationTime") ?: ""
             val scope = jsonObject.getString("scope") ?: ""
             val category = jsonObject.getString("category") ?: ""
             if (jsonObject.has("childExperimentId")) {
-                childExperimentId = jsonObject.getString("childExperimentId1")
+                childExperimentId = jsonObject.getString("childExperimentId")
             }
             if (jsonObject.has("childVariationId")) {
                 childVariationId = jsonObject.getString("childVariationId")
             }
-            val resultMap = toMap(jsonObject.getJSONObject("message1"))
+            val resultMap = toMap(jsonObject.getJSONObject("message"))
             val msg: WEInboxMessageData = PushNotificationTemplateData(java.util.HashMap(resultMap))
             return WEInboxMessage(
                 experimentId,

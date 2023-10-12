@@ -149,6 +149,7 @@ class MethodChannelWeNotificationinboxFlutter
       responseData[HASNEXT] = hasNextPage;
     }
     WELogger.v('notificationList Response -$responseData');
+    WELogger.v('Response -$hasNextPage');
     return responseData;
   }
 }

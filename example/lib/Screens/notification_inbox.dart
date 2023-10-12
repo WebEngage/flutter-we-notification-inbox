@@ -27,7 +27,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        if (_hasNextPage) {
+        if (_hasNextPage && !_isLoading) {
           setState(() {
             _isLoading = true;
           });

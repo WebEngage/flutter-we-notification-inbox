@@ -28,14 +28,15 @@ class MethodChannelWeNotificationinboxFlutter
           await methodChannel.invokeMethod(METHOD_NAME_GET_NOTIFICATION_COUNT);
       return result;
     } catch (error) {
-      rethrow;
+      var countError = (error as PlatformException).message as String;
+      throw (countError);
     }
   }
 
   @override
   Future<dynamic> getNotificationList({dynamic offsetJSON}) async {
     try {
-      String jsonString = jsonEncode(offsetJSON);
+      dynamic jsonString = jsonEncode(offsetJSON);
       final dynamic result = await methodChannel.invokeMethod(
           METHOD_NAME_GET_NOTIFICATION_LIST, {OFFSETJSON: jsonString});
       if (result != null) {
@@ -43,8 +44,8 @@ class MethodChannelWeNotificationinboxFlutter
         return response;
       }
     } catch (error) {
-      WELogger.e('Error in Notification ListResponse - $error');
-      rethrow;
+      var listError = (error as PlatformException).message as String;
+      throw (listError);
     }
   }
 

@@ -43,7 +43,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
           await _weNotificationInboxFlutterPlugin.getNotificationList();
       handleSuccess(notificationList);
     } catch (error) {
-      rethrow;
+      print("WebEngage-Inbox: $error");
     } finally {
       setState(() {
         _isLoading = false; // Fetching is complete, set loading to false
@@ -60,7 +60,7 @@ class _NotificationInboxState extends State<NotificationInbox> {
           .getNotificationList(offsetJSON: offset);
       handleSuccess(notificationList, isFetchMore: true);
     } catch (error) {
-      rethrow;
+      print("WebEngage-Inbox: $error");
     } finally {
       setState(() {
         _isLoading = false;

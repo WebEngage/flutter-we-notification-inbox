@@ -73,9 +73,11 @@ class _MyHomePageState extends State<MyHomePage> {
     String notificationCount = "0";
     try {
       notificationCount =
-      await _weNotificationInboxFlutterPlugin.getNotificationCount();
-    } on PlatformException {
-      WELogger.e("Exception occurred while getting platform version");
+          await _weNotificationInboxFlutterPlugin.getNotificationCount();
+      print(
+          "WebEngage-Inbox: notificationCount in the sample App \n $notificationCount ");
+    } catch (error) {
+      print("WebEngage-Inbox: Exception occurred in the sample App \n $error ");
     }
     if (!mounted) return;
     setState(() {
@@ -102,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void toggleLogin() {
-    if(_isLoggedIn) {
+    if (_isLoggedIn) {
       setState(() {
         _isLoggedIn = false;
       });
@@ -179,7 +181,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Container(
                               padding: EdgeInsets.all(16.0),
                               child: Text(
-                                _isLoggedIn ? 'Welcome $_cuidValue,': 'Guest User',
+                                _isLoggedIn
+                                    ? 'Welcome $_cuidValue,'
+                                    : 'Guest User',
                                 style: const TextStyle(
                                   color: Color.fromRGBO(100, 145, 222, 1),
                                   fontStyle: FontStyle.italic,
@@ -194,8 +198,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             alignment: Alignment.topRight,
                             child: Container(
                               padding: EdgeInsets.all(16.0),
-                              child:
-                              CustomWidgets.button(_isLoggedIn ? LOGOUT : LOGIN, toggleLogin),
+                              child: CustomWidgets.button(
+                                  _isLoggedIn ? LOGOUT : LOGIN, toggleLogin),
                             ),
                           ),
                         ],
@@ -208,12 +212,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           Row(
                             children: [
                               Expanded(
-                                child: Image.asset(
-                                    'assets/images/card1.webp'),
+                                child: Image.asset('assets/images/card1.webp'),
                               ),
                               Expanded(
-                                child: Image.asset(
-                                    'assets/images/card2.jpeg'),
+                                child: Image.asset('assets/images/card2.jpeg'),
                               ),
                             ],
                           ),

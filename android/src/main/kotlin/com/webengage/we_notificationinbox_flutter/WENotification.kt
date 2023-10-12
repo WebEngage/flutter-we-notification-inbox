@@ -37,8 +37,8 @@ class WENotification {
             }
 
             override fun onError(errorCode: Int, error: Map<String, Any?>) {
-                Logger.e(Constants.TAG, "count - error: $errorCode while fetching Count \n$error")
-                result.error(errorCode.toString(), "Error!", error)
+                Logger.e(Constants.TAG, "getNotificationCount - error_code: $errorCode \n Error -  ${error}")
+                result.error(errorCode.toString(), "Notification Count: Resource Fetching failed", error)
             }
         })
     }
@@ -94,8 +94,8 @@ class WENotification {
                 }
 
                 override fun onError(errorCode: Int, error: Map<String, Any?>) {
-                    Logger.e(Constants.TAG, "List - error: $errorCode while fetching Count \n$error")
-                    result?.error(errorCode.toString(), "Error Accessing Initial notification list ", error)
+                    Logger.e(Constants.TAG, "getNotificationList - error_code: $errorCode \n Error - ${error}")
+                    result?.error(errorCode.toString(), "Notification List: Resource fetching failed", error)
                 }
             })
         } else {
@@ -120,18 +120,14 @@ class WENotification {
                         }
 
                         override fun onError(errorCode: Int, error: Map<String, Any?>) {
-                            Logger.e(
-                                Constants.TAG,
-                                "List - error: $errorCode while fetching Notification List \n$error"
-                            )
-
-                            result?.error(errorCode.toString(), "Error while fetching Notification List", error)
+                            Logger.e(Constants.TAG, "getNotificationList - error_code: $errorCode \n Error - ${error}");
+                            result?.error(errorCode.toString(), "Notification List with offset: Resource fetching failed", error);
                         }
                     })
             } catch (e: Exception) {
                 val emptyErrorMap = emptyMap<String, Any?>()
-                Logger.e(Constants.TAG, "Exception while parsing json data to WEInboxData $e")
-                result?.error("Exception occurred", "Exception while parsing JSON data", emptyErrorMap);
+                Logger.e(Constants.TAG, "Exception while parsing json data to WEInboxData $e");
+                result?.error("JSON_EXCEPTION", "Notification List with offset: Exception while parsing JSON data", e);
             }
         }
     }

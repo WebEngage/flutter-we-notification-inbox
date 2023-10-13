@@ -37,7 +37,7 @@ class WENotification {
 
             override fun onError(errorCode: Int, error: Map<String, Any?>) {
                 Logger.e(Constants.TAG, "getNotificationCount - error_code: $errorCode \n Error -  ${error}")
-                result.error(errorCode.toString(), "Notification Count: Resource Fetching failed", error)
+                result.error(errorCode.toString(), "Notification Count: ${Constants.RESOURCE_FETCHING_FALED}", error)
             }
         })
     }
@@ -94,7 +94,7 @@ class WENotification {
 
                 override fun onError(errorCode: Int, error: Map<String, Any?>) {
                     Logger.e(Constants.TAG, "getNotificationList - error_code: $errorCode \n Error - ${error}")
-                    result?.error(errorCode.toString(), "Notification List: Resource fetching failed", error)
+                    result?.error(errorCode.toString(), "Notification List: ${Constants.RESOURCE_FETCHING_FALED}", error)
                 }
             })
         } else {
@@ -120,7 +120,7 @@ class WENotification {
 
                         override fun onError(errorCode: Int, error: Map<String, Any?>) {
                             Logger.e(Constants.TAG, "getNotificationList - error_code: $errorCode \n Error - ${error}");
-                            result?.error(errorCode.toString(), "Notification List with offset: Resource fetching failed", error);
+                            result?.error(errorCode.toString(), "Notification List with offset: ${Constants.RESOURCE_FETCHING_FALED}", error);
                         }
                     })
             } catch (e: Exception) {

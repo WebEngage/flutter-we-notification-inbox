@@ -8,6 +8,7 @@ import 'package:we_notificationinbox_flutter_example/Screens/login.dart';
 import 'package:we_notificationinbox_flutter_example/Screens/notification_inbox.dart';
 import 'package:we_notificationinbox_flutter_example/Utils/Constants.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
+import 'package:we_notificationinbox_flutter/src/we_notification_response.dart';
 import '../Utils/Utils.dart';
 import '../Widgets/Button.dart';
 
@@ -71,16 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> getNotificationCount() async {
     String notificationCount = "0";
-    try {
-      notificationCount =
-          await _weNotificationInboxFlutterPlugin.getNotificationCount();
+    WENotificationResponse weNotificationResponse = await _weNotificationInboxFlutterPlugin.getNotificationCount();
+    if(weNotificationResponse.isSuccess) {
       if (kDebugMode) {
-        print(
-          "WebEngage-Sample-App: notificationCount in the sample App \n $notificationCount ");
+        print("WebEngage-Sample-App: notificationCount in the sample App \n ${weNotificationResponse.response}");
       }
-    } catch (error) {
+    } else {
       if (kDebugMode) {
-        print("WebEngage-Sample-App: Exception occurred while accessing Notification Count \n $error ");
+        print("WebEngage-Sample-App: Exception occurred while accessing Notification Count \n ${weNotificationResponse.response} ");
       }
     }
     if (!mounted) return;

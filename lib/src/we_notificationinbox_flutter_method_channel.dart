@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:we_notificationinbox_flutter/src/we_notification_response.dart';
 
 import 'we_notificationinbox_flutter_platform_interface.dart';
 import '../utils/Constants.dart';
@@ -22,14 +23,22 @@ class MethodChannelWeNotificationinboxFlutter
   }
 
   @override
-  Future<String> getNotificationCount() async {
+  Future<dynamic> getNotificationCount() async {
     try {
       final result =
           await methodChannel.invokeMethod(METHOD_NAME_GET_NOTIFICATION_COUNT);
-      return result;
+      return WENotificationResponse(
+        response: result,
+        errorMessage: null,
+        isSuccess: true,
+      );
     } catch (error) {
       var countError = (error as PlatformException).message as String;
-      throw (countError);
+      return WENotificationResponse(
+        response: null,
+        errorMessage: countError,
+        isSuccess: false,
+      );
     }
   }
 
@@ -39,13 +48,23 @@ class MethodChannelWeNotificationinboxFlutter
       dynamic jsonString = jsonEncode(offsetJSON);
       final dynamic result = await methodChannel.invokeMethod(
           METHOD_NAME_GET_NOTIFICATION_LIST, {OFFSETJSON: jsonString});
+
       if (result != null) {
         final Map<String, dynamic> response = notificationListResponse(result);
+        return WENotificationResponse(
+          response: response,
+          errorMessage: null,
+          isSuccess: true,
+        );
         return response;
       }
     } catch (error) {
       var listError = (error as PlatformException).message as String;
-      throw (listError);
+      return WENotificationResponse(
+        response: null,
+        errorMessage: listError,
+        isSuccess: false,
+      );
     }
   }
 
@@ -114,7 +133,8 @@ class MethodChannelWeNotificationinboxFlutter
   @override
   Future<dynamic> readAll(List<dynamic> notificationList) async {
     if (notificationList.isNotEmpty) {
-      return await methodChannel.invokeMethod(METHOD_NAME_READ_ALL, notificationList);
+      return await methodChannel.invokeMethod(
+          METHOD_NAME_READ_ALL, notificationList);
     } else {
       WELogger.v('readAll - list is empty');
       return;
@@ -145,7 +165,8 @@ class MethodChannelWeNotificationinboxFlutter
 
   @override
   Future<dynamic> resetNotificationCount() async {
-    return await methodChannel.invokeMethod(METHOD_NAME_RESET_NOTIFICATION_COUNT);
+    return await methodChannel
+        .invokeMethod(METHOD_NAME_RESET_NOTIFICATION_COUNT);
   }
 
   dynamic notificationListResponse(dynamic result) {

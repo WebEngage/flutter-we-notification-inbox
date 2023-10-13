@@ -4,7 +4,7 @@ version: 0.0.1
 homepage: https://webengage.com/
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: ">=2.19.0 <3.0.0"
   flutter: ">=2.5.0"
 
 dependencies:
@@ -36,9 +36,9 @@ flutter:
     platforms:
       android:
         package: com.webengage.we_notificationinbox_flutter
-        pluginClass: WeNotificationinboxFlutterPlugin
+        pluginClass: WENotificationInboxFlutterPlugin
       ios:
-        pluginClass: WeNotificationinboxFlutterPlugin
+        pluginClass: WENotificationInboxFlutterPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

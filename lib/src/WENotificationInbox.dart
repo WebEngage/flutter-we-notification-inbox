@@ -56,7 +56,7 @@ class WENotificationInbox {
   }
 
   Future<dynamic> unReadAll(List<dynamic> notificationList) async {
-    var unreadAllEvent = WENotificationInboxFlutterPlatform.instance.unReadAll(notificationList);
+    var unreadAllEvent = await WENotificationInboxFlutterPlatform.instance.unReadAll(notificationList);
     return unreadAllEvent;
   }
 

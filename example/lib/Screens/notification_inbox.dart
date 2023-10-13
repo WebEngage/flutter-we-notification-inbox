@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
 import 'package:we_notificationinbox_flutter_example/Utils/Constants.dart';
+import 'package:we_notificationinbox_flutter/src/we_notification_response.dart';
+
 import '../Models/CustomCell.dart';
 import '../Models/cell_model.dart';
 
@@ -39,38 +41,44 @@ class _NotificationInboxState extends State<NotificationInbox> {
   }
 
   Future<void> fetchNotificationList() async {
-    try {
-      var notificationList =
-          await _weNotificationInboxFlutterPlugin.getNotificationList();
-      handleSuccess(notificationList);
-    } catch (error) {
+    WENotificationResponse weNotificationResponse =
+        await _weNotificationInboxFlutterPlugin.getNotificationList();
+    if (weNotificationResponse.isSuccess) {
+      Map<String, dynamic> fetchedNotificationList =
+          weNotificationResponse.response;
+      handleSuccess(fetchedNotificationList, isFetchMore: false);
+    } else {
+      var errorMessage = weNotificationResponse.errorMessage;
       if (kDebugMode) {
-        print("WebEngage-Sample-App: Error while Fetching Notification List \n $error");
+        print(
+            "WebEngage-Sample-App: Error while Fetching Notification List \n $errorMessage");
       }
-    } finally {
-      setState(() {
-        _isLoading = false; // Fetching is complete, set loading to false
-      });
     }
+    setState(() {
+      _isLoading = false; // Fetching is complete, set loading to false
+    });
   }
 
   Future<void> fetchNext() async {
-    Map<String, dynamic> notificationList;
+    Map<String, dynamic> fetchedNotificationList;
     var offset = _notificationList[_notificationList.length - 1];
 
-    try {
-      notificationList = await _weNotificationInboxFlutterPlugin
-          .getNotificationList(offsetJSON: offset);
-      handleSuccess(notificationList, isFetchMore: true);
-    } catch (error) {
+    WENotificationResponse weNotificationResponse =
+        await _weNotificationInboxFlutterPlugin.getNotificationList(
+            offsetJSON: offset);
+    if (weNotificationResponse.isSuccess) {
+      fetchedNotificationList = weNotificationResponse.response;
+      handleSuccess(fetchedNotificationList, isFetchMore: true);
+    } else {
+      var errorMessage = weNotificationResponse.errorMessage;
       if (kDebugMode) {
-        print("WebEngage-Sample-App: Error while Fetching Notification List with offset \n $error");
+        print(
+            "WebEngage-Sample-App: Error while Fetching Notification List with offset \n $errorMessage");
       }
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void updateCellDataList(int index, String newStatus) {

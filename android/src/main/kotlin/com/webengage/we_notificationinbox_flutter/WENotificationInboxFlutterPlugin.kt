@@ -9,7 +9,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
-class WeNotificationInboxFlutterPlugin : FlutterPlugin, MethodCallHandler {
+class WENotificationInboxFlutterPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
     private var weNotification = WENotification();
     private lateinit var context: Context;

@@ -22,7 +22,7 @@ abstract class WENotificationInboxFlutterPlatform extends PlatformInterface {
         'webengage-inbox: initNotificationInbox() has not been implemented.');
   }
 
-  Future<String> getNotificationCount() {
+  Future<dynamic> getNotificationCount() {
     throw UnimplementedError(
         'webengage-inbox: getNotificationCount() has not been implemented.');
   }

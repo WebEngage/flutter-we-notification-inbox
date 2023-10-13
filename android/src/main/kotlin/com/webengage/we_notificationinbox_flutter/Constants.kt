@@ -20,6 +20,7 @@ interface Constants {
             const val METHOD_NAME_DELETE_ALL = "deleteAll"
             const val METHOD_NAME_RESET_NOTIFICATION_COUNT = "resetNotificationCount"
             const val METHOD_NAME_INIT = "init"
+            const val RESOURCE_FETCHING_FALED = "Resource fetching failed"
 
 
 

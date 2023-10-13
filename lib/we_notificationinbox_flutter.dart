@@ -65,7 +65,7 @@ class WENotificationinboxFlutter {
 
   Future<dynamic> resetNotificationCount() async {
     var resetCount =
-        WENotificationInboxFlutterPlatform.instance.resetNotificationCount();
+        await WENotificationInboxFlutterPlatform.instance.resetNotificationCount();
     return resetCount;
   }
 }

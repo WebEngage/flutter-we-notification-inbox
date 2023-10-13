@@ -6,7 +6,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class MockWeNotificationinboxFlutterPlatform
     with MockPlatformInterfaceMixin
-    implements WeNotificationinboxFlutterPlatform {
+    implements WENotificationInboxFlutterPlatform {
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
 
@@ -84,8 +84,8 @@ class MockWeNotificationinboxFlutterPlatform
 }
 
 void main() {
-  final WeNotificationinboxFlutterPlatform initialPlatform =
-      WeNotificationinboxFlutterPlatform.instance;
+  final WENotificationInboxFlutterPlatform initialPlatform =
+      WENotificationInboxFlutterPlatform.instance;
 
   test('$MethodChannelWeNotificationinboxFlutter is the default instance', () {
     expect(initialPlatform,
@@ -97,7 +97,7 @@ void main() {
         WENotificationinboxFlutter();
     MockWeNotificationinboxFlutterPlatform fakePlatform =
         MockWeNotificationinboxFlutterPlatform();
-    WeNotificationinboxFlutterPlatform.instance = fakePlatform;
+    WENotificationInboxFlutterPlatform.instance = fakePlatform;
 
     expect(await weNotificationinboxFlutterPlugin.getPlatformVersion(), '42');
   });

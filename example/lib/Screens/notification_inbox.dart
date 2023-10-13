@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
@@ -43,7 +44,9 @@ class _NotificationInboxState extends State<NotificationInbox> {
           await _weNotificationInboxFlutterPlugin.getNotificationList();
       handleSuccess(notificationList);
     } catch (error) {
-      print("WebEngage-Inbox: $error");
+      if (kDebugMode) {
+        print("WebEngage-Sample-App: Error while Fetching Notification List \n $error");
+      }
     } finally {
       setState(() {
         _isLoading = false; // Fetching is complete, set loading to false
@@ -60,7 +63,9 @@ class _NotificationInboxState extends State<NotificationInbox> {
           .getNotificationList(offsetJSON: offset);
       handleSuccess(notificationList, isFetchMore: true);
     } catch (error) {
-      print("WebEngage-Inbox: $error");
+      if (kDebugMode) {
+        print("WebEngage-Sample-App: Error while Fetching Notification List with offset \n $error");
+      }
     } finally {
       setState(() {
         _isLoading = false;

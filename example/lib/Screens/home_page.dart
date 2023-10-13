@@ -1,8 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:we_notificationinbox_flutter/utils/WELogger.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
 import 'package:we_notificationinbox_flutter_example/Screens/login.dart';
 import 'package:we_notificationinbox_flutter_example/Screens/notification_inbox.dart';
@@ -74,10 +74,14 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       notificationCount =
           await _weNotificationInboxFlutterPlugin.getNotificationCount();
-      print(
-          "WebEngage-Inbox: notificationCount in the sample App \n $notificationCount ");
+      if (kDebugMode) {
+        print(
+          "WebEngage-Sample-App: notificationCount in the sample App \n $notificationCount ");
+      }
     } catch (error) {
-      print("WebEngage-Inbox: Exception occurred in the sample App \n $error ");
+      if (kDebugMode) {
+        print("WebEngage-Sample-App: Exception occurred while accessing Notification Count \n $error ");
+      }
     }
     if (!mounted) return;
     setState(() {
@@ -89,7 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       await _weNotificationInboxFlutterPlugin.resetNotificationCount();
     } catch (error) {
-      rethrow;
+      if (kDebugMode) {
+        print("WebEngage-Sample-App: Error while reseting Notification count");
+      }
     }
     if (!mounted) return;
 

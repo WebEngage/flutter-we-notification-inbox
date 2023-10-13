@@ -8,7 +8,7 @@ import '../utils/Constants.dart';
 import '../utils/WELogger.dart';
 
 class MethodChannelWeNotificationinboxFlutter
-    extends WeNotificationinboxFlutterPlatform {
+    extends WENotificationInboxFlutterPlatform {
   @visibleForTesting
   final methodChannel =
       const MethodChannel(METHOD_CHANNEL_WE_NOTIFICATIONINBOX_FLUTTER);
@@ -50,7 +50,7 @@ class MethodChannelWeNotificationinboxFlutter
   }
 
   @override
-  Future<void> markRead(Map<String, dynamic> readMap) async {
+  Future<dynamic> markRead(Map<String, dynamic> readMap) async {
     if (readMap.isEmpty) {
       WELogger.v("No Notification Item passed to markRead");
       return;
@@ -58,14 +58,15 @@ class MethodChannelWeNotificationinboxFlutter
 
     String status = readMap['status'] ?? "";
     if (status.toLowerCase() != READ_STATUS) {
-      await methodChannel.invokeMethod(METHOD_NAME_MARK_READ, readMap);
+      return await methodChannel.invokeMethod(METHOD_NAME_MARK_READ, readMap);
     } else {
       WELogger.e("markRead - status is already read");
+      return;
     }
   }
 
   @override
-  Future<void> markUnread(Map<String, dynamic> readMap) async {
+  Future<dynamic> markUnread(Map<String, dynamic> readMap) async {
     if (readMap.isEmpty) {
       WELogger.v("No Notification Item passed to markUnread");
       return;
@@ -73,71 +74,78 @@ class MethodChannelWeNotificationinboxFlutter
 
     String status = readMap['status'] ?? "";
     if (status.toLowerCase() != UNREAD_STATUS) {
-      await methodChannel.invokeMethod(METHOD_NAME_MARK_UNREAD, readMap);
+      return await methodChannel.invokeMethod(METHOD_NAME_MARK_UNREAD, readMap);
     } else {
       WELogger.e("markRead - status is already unread");
+      return;
     }
   }
 
   @override
-  Future<void> trackClick(Map<String, dynamic> readMap) async {
+  Future<dynamic> trackClick(Map<String, dynamic> readMap) async {
     if (readMap.isEmpty) {
       WELogger.v("No Notification Item passed to trackClick");
+      return;
     } else {
-      await methodChannel.invokeMethod(METHOD_NAME_TRACK_CLICK, readMap);
+      return await methodChannel.invokeMethod(METHOD_NAME_TRACK_CLICK, readMap);
     }
   }
 
   @override
-  Future<void> trackView(Map<String, dynamic> readMap) async {
+  Future<dynamic> trackView(Map<String, dynamic> readMap) async {
     if (readMap.isEmpty) {
       WELogger.v("No Notification Item passed to trackView");
+      return;
     } else {
-      await methodChannel.invokeMethod(METHOD_NAME_TRACK_VIEW, readMap);
+      return await methodChannel.invokeMethod(METHOD_NAME_TRACK_VIEW, readMap);
     }
   }
 
   @override
-  Future<void> markDelete(Map<String, dynamic> readMap) async {
+  Future<dynamic> markDelete(Map<String, dynamic> readMap) async {
     if (readMap.isEmpty) {
       WELogger.v("No Notification Item passed to markDelete");
+      return;
     } else {
-      await methodChannel.invokeMethod(METHOD_NAME_MARK_DELETE, readMap);
+      return await methodChannel.invokeMethod(METHOD_NAME_MARK_DELETE, readMap);
     }
   }
 
   @override
-  Future<void> readAll(List<dynamic> notificationList) async {
+  Future<dynamic> readAll(List<dynamic> notificationList) async {
     if (notificationList.isNotEmpty) {
-      await methodChannel.invokeMethod(METHOD_NAME_READ_ALL, notificationList);
+      return await methodChannel.invokeMethod(METHOD_NAME_READ_ALL, notificationList);
     } else {
       WELogger.v('readAll - list is empty');
+      return;
     }
   }
 
   @override
-  Future<void> unReadAll(List<dynamic> notificationList) async {
+  Future<dynamic> unReadAll(List<dynamic> notificationList) async {
     if (notificationList.isNotEmpty) {
-      await methodChannel.invokeMethod(
+      return await methodChannel.invokeMethod(
           METHOD_NAME_UNREAD_ALL, notificationList);
     } else {
       WELogger.v('unReadAll - list is empty');
+      return;
     }
   }
 
   @override
-  Future<void> deleteAll(List<dynamic> notificationList) async {
+  Future<dynamic> deleteAll(List<dynamic> notificationList) async {
     if (notificationList.isNotEmpty) {
-      await methodChannel.invokeMethod(
+      return await methodChannel.invokeMethod(
           METHOD_NAME_DELETE_ALL, notificationList);
     } else {
       WELogger.v('deleteAll - list is empty');
+      return;
     }
   }
 
   @override
-  Future<void> resetNotificationCount() async {
-    await methodChannel.invokeMethod(METHOD_NAME_RESET_NOTIFICATION_COUNT);
+  Future<dynamic> resetNotificationCount() async {
+    return await methodChannel.invokeMethod(METHOD_NAME_RESET_NOTIFICATION_COUNT);
   }
 
   dynamic notificationListResponse(dynamic result) {

@@ -19,7 +19,6 @@ class WENotification {
     private lateinit var context: Context;
     var helper = getInstance()
 
-
     fun initialization() {
         // Available for Future Initialization (iOS - version tracking)
         // Android - Should work without Initialization as well
@@ -32,7 +31,7 @@ class WENotification {
     fun getNotificationCount(result: MethodChannel.Result) {
         get(context).getUserNotificationCount(context, object : WEInboxCallback<String> {
             override fun onSuccess(counter: String) {
-                Logger.d("WebEngage-inbox"," count - "+counter);
+                Logger.d("WebEngage-inbox", " count response - $counter");
                 result.success(counter)
             }
 
@@ -127,7 +126,7 @@ class WENotification {
             } catch (e: Exception) {
                 val emptyErrorMap = emptyMap<String, Any?>()
                 Logger.e(Constants.TAG, "Exception while parsing json data to WEInboxData $e");
-                result?.error("JSON_EXCEPTION", "Notification List with offset: Exception while parsing JSON data", e);
+                result?.error("JSON_EXCEPTION", "Notification List with offset: Exception while parsing offset JSON data", e);
             }
         }
     }

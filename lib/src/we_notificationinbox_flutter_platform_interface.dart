@@ -2,17 +2,17 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'we_notificationinbox_flutter_method_channel.dart';
 
-abstract class WeNotificationinboxFlutterPlatform extends PlatformInterface {
-  WeNotificationinboxFlutterPlatform() : super(token: _token);
+abstract class WENotificationInboxFlutterPlatform extends PlatformInterface {
+  WENotificationInboxFlutterPlatform() : super(token: _token);
 
   static final Object _token = Object();
 
-  static WeNotificationinboxFlutterPlatform _instance =
+  static WENotificationInboxFlutterPlatform _instance =
       MethodChannelWeNotificationinboxFlutter();
 
-  static WeNotificationinboxFlutterPlatform get instance => _instance;
+  static WENotificationInboxFlutterPlatform get instance => _instance;
 
-  static set instance(WeNotificationinboxFlutterPlatform instance) {
+  static set instance(WENotificationInboxFlutterPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }

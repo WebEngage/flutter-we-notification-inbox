@@ -1,3 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.webengage.we_notificationinbox_flutter">
+    <application>
+        <meta-data
+            android:name="com.webengage.child.fl_ni"
+            android:value="fl_ni:${we_fl_ni_version}" />
+    </application>
 </manifest>

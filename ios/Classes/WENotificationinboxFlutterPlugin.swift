@@ -68,6 +68,6 @@ public class WENotificationinboxFlutterPlugin: NSObject, FlutterPlugin {
   
   func initialiseWEGVersion() {
         let key: WegVersionKey = .FLNI
-        WebEngage.sharedInstance().setVersionForChildSDK(WEGPluginVersion, for: key)
+      WebEngage.sharedInstance().setVersionForChildSDK(WENotificationinboxFlutterPlugin.WEGPluginVersion, for: key)
    }
 }

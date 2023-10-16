@@ -16,4 +16,5 @@ struct WEConstants{
    static let MESSAGELIST = "messageList"
    static let OFFSETJSON = "offsetJSON"
    static let HASNEXT = "hasNext"
+    static let NULL = "null"
 }

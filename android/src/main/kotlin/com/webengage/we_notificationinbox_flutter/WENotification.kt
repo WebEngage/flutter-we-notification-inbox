@@ -120,13 +120,13 @@ class WENotification {
 
                         override fun onError(errorCode: Int, error: Map<String, Any?>) {
                             Logger.e(Constants.TAG, "getNotificationList - error_code: $errorCode \n Error - ${error}");
-                            result?.error(errorCode.toString(), "Notification List with offset: ${Constants.RESOURCE_FETCHING_FALED}", error);
+                            result?.error(errorCode.toString(), "Notification List: Resource fetching failed", error);
                         }
                     })
             } catch (e: Exception) {
                 val emptyErrorMap = emptyMap<String, Any?>()
                 Logger.e(Constants.TAG, "Exception while parsing json data to WEInboxData $e");
-                result?.error("JSON_EXCEPTION", "Notification List with offset: Exception while parsing offset JSON data", e);
+                result?.error("JSON_EXCEPTION", "Notification List: Exception while parsing JSON data", e);
             }
         }
     }

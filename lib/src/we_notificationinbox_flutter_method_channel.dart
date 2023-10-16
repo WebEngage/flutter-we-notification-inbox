@@ -48,8 +48,8 @@ class MethodChannelWeNotificationinboxFlutter
       dynamic jsonString = jsonEncode(offsetJSON);
       final dynamic result = await methodChannel.invokeMethod(
           METHOD_NAME_GET_NOTIFICATION_LIST, {OFFSETJSON: jsonString});
-
       if (result != null) {
+        WELogger.v("Result in getNotificationList $result()");
         final Map<String, dynamic> response = notificationListResponse(result);
         return WENotificationResponse(
           response: response,

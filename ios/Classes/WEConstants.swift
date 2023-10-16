@@ -16,5 +16,7 @@ struct WEConstants{
    static let MESSAGELIST = "messageList"
    static let OFFSETJSON = "offsetJSON"
    static let HASNEXT = "hasNext"
-    static let NULL = "null"
+   static let NULL = "null"
+   static let TAG = "WebEngage-Inbox"
+   static let RESOURCE_FETCHING_FALED = "Resource fetching failed"
 }

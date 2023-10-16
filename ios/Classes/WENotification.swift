@@ -11,11 +11,11 @@ class WENotification{
      @objc func getNotificationCount(result: @escaping FlutterResult) {
         WENotificationInbox.shared.getUserNotificationCount { data, error in
             if let count = data {
-                WELogger.d("WebEngage-inbox count - \(count)");
+                WELogger.d("\(WEConstants.TAG) count - \(count)");
                 result(count)
             } else {
                 if let errorMap = error {
-                    WELogger.d("WebEngage-inbox getNotificationCount - error_code: $errorCode \n Error -  \(String(describing: error))")
+                    WELogger.d("\(WEConstants.TAG) getNotificationCount - error_code: \(errorMap.code)\n Error - Notification Count: \(WEConstants.RESOURCE_FETCHING_FALED)")
                      self.handleNotificationCountError(error: errorMap, result)
                 }
             }
@@ -35,7 +35,7 @@ class WENotification{
                     }
                 } catch {
                     let errorResponse = ["error": "JSON parsing error"]
-                    WELogger.d("WebEngage-inbox Exception while parsing json data to WEInboxData $e");
+                    WELogger.d("\(WEConstants.TAG) Exception while parsing json data to WEInboxData $e");
                     result(FlutterError(code: "JSON_PARSE_ERROR", message: "Error parsing JSON", details: errorResponse))
                 }
             }
@@ -44,7 +44,7 @@ class WENotification{
             if let response = response {
                 self.handleNotificationListSuccess(response: response, result)
             } else if let error = error {
-                WELogger.d("WebEngage-inbox  getNotificationList - error_code: $errorCode \n Error - \(error)")
+                WELogger.d("\(WEConstants.TAG)  getNotificationList - error_code: \(error.code) \n Error - Notification List: \(WEConstants.RESOURCE_FETCHING_FALED)")
                 self.handleNotificationListError(error: error, result)
             }
         }
@@ -97,12 +97,12 @@ class WENotification{
     
     private func handleNotificationListError(error: WEInboxError, _ result: @escaping FlutterResult) {
          let errorCode:String = "\(error.code)"
-        result(FlutterError(code: errorCode, message: "Notification List: Resource Fetching failed", details: error))
+        result(FlutterError(code: errorCode, message: "Notification List: \(WEConstants.RESOURCE_FETCHING_FALED)", details: error.errorDescription))
     }
     
     private func handleNotificationCountError(error: WEInboxError, _ result: @escaping FlutterResult) {
         let errorCode:String = "\(error.code)"
-        result(FlutterError(code: errorCode, message: "Notification Count: Resource Fetching failed", details: error))
+        result(FlutterError(code: errorCode , message: "Notification Count: \(WEConstants.RESOURCE_FETCHING_FALED)", details: error.errorDescription))
     }
 
     func handleNotificationListSuccess(response: WEInboxData, _ result: @escaping FlutterResult) {
@@ -121,7 +121,7 @@ class WENotification{
                 return jsonString
             }
         } catch {
-            print("WebEngage-Inbox: Error converting messageListData to JSON: \(error)")
+            print("\(WEConstants.TAG): Error converting messageListData to JSON: \(error)")
         }
         return ""
     }

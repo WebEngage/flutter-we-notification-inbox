@@ -72,14 +72,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> getNotificationCount() async {
     String notificationCount = "0";
-    WENotificationResponse weNotificationResponse = await _weNotificationInboxFlutterPlugin.getNotificationCount();
-    if(weNotificationResponse.isSuccess) {
+    WENotificationResponse weNotificationResponse =
+        await _weNotificationInboxFlutterPlugin.getNotificationCount();
+    if (weNotificationResponse.isSuccess) {
       if (kDebugMode) {
-        print("WebEngage-Sample-App: notificationCount in the sample App \n ${weNotificationResponse.response}");
+        print(
+            "WebEngage-Sample-App: notificationCount in the sample App \n ${weNotificationResponse.response}");
       }
     } else {
       if (kDebugMode) {
-        print("WebEngage-Sample-App: Exception occurred while accessing Notification Count \n ${weNotificationResponse.response} ");
+        print(
+            "WebEngage-Sample-App: Exception occurred while accessing Notification Count \n ${weNotificationResponse.errorMessage} ");
       }
     }
     if (!mounted) return;

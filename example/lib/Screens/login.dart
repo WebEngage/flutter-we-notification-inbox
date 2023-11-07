@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_cuidValue.isNotEmpty) {
       _isLoggedIn = true;
       if (_jwt.isNotEmpty) {
-        WebEngagePlugin.userLoginWithSecureToken(_cuidValue, _jwt);
+        WebEngagePlugin.userLogin(_cuidValue, _jwt);
       } else {
         WebEngagePlugin.userLogin(_cuidValue);
       }

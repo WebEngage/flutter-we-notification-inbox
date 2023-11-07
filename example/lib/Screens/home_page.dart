@@ -45,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _notificationCount = 0;
   var _cuidValue = "";
   var _isLoggedIn = false;
+  late WebEngagePlugin _webEngagePlugin;
 
   @override
   void initState() {
@@ -52,6 +53,14 @@ class _MyHomePageState extends State<MyHomePage> {
     WENotificationInbox().init(enableLogs: true);
     initSharedPref();
     _init();
+    _webEngagePlugin = new WebEngagePlugin();
+    _webEngagePlugin.tokenInvalidatedCallback(_onTokenInvalidated);
+  }
+
+  void _onTokenInvalidated(Map<String, dynamic>? message) {
+    print("tokenInvalidated callback received " + message.toString());
+    // Reset with new Security Token in the callback
+    // WebEngagePlugin.setSecureToken("USER_NAME", "REPLACE_JWT_TOKEN_HERE");
   }
 
   void initSharedPref() {

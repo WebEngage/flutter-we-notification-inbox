@@ -64,6 +64,6 @@ String readVersion() {
 }
 
 dependencies {
-    api 'com.webengage:android-sdk:[4.4,)'
-    api 'com.webengage:we-notification-inbox:[1,)'
+    implementation 'com.webengage:android-sdk:[4.7,)'
+    implementation 'com.webengage:we-notification-inbox:[1.1,)'
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:we_notificationinbox_flutter_example/Utils/Constants.dart';
 
 class Utils {
   static SharedPreferences? _prefs;
@@ -8,15 +9,12 @@ class Utils {
     _prefs ??= await SharedPreferences.getInstance();
   }
 
-  static var IS_LOGIN = "isLogin";
-  static var CUID = "cuid";
-
-  static Future<bool> isLogin() async {
+  static Future<bool> isLoggedIn() async {
     await initSharedPref();
     return _prefs!.getBool(IS_LOGIN) ?? false;
   }
 
-  static void setIsLogin(bool isLogin) {
+  static void setIsLoggedIn(bool isLogin) {
     if (!isLogin) {
       _prefs?.remove(CUID);
     }
@@ -25,6 +23,14 @@ class Utils {
 
   static void setCuid(String cuid) {
     _prefs?.setString(CUID, cuid);
+  }
+
+  static void setJwt(String jwt) {
+    _prefs?.setString(JWT, jwt);
+  }
+
+  static void getJwt() {
+    _prefs?.getString(JWT);
   }
 
   static String? getCuid() {

@@ -7,7 +7,6 @@ class CustomWidgets {
           decoration: const BoxDecoration(
               color: Color.fromARGB(255, 73, 148, 236),
               borderRadius: BorderRadius.all(Radius.circular(10))),
-          // padding: const EdgeInsets.all(20),
           margin: const EdgeInsets.all(20),
           width: 100.0,
           height: 40.0,

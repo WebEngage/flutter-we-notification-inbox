@@ -1,5 +1,5 @@
 group 'com.webengage.we_notificationinbox_flutter'
-version '1.0.0'
+version '1.0.1'
 
 buildscript {
     ext.kotlin_version = '1.7.10'
@@ -25,7 +25,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    namespace "com.webengage.we_notificationinbox_flutter" 
+    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

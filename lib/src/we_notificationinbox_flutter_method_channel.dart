@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:we_notificationinbox_flutter/src/we_notification_response.dart';
 
-import 'we_notificationinbox_flutter_platform_interface.dart';
 import '../utils/Constants.dart';
 import '../utils/WELogger.dart';
+import 'we_notificationinbox_flutter_platform_interface.dart';
 
 class MethodChannelWeNotificationinboxFlutter
     extends WENotificationInboxFlutterPlatform {
@@ -171,11 +171,9 @@ class MethodChannelWeNotificationinboxFlutter
     Map<String, dynamic> responseData = {};
     final messageString = result[MESSAGELIST] as String;
     final hasNextPage = result[HASNEXT] as bool;
-    if (messageString != null) {
-      final messageList = jsonDecode(messageString);
-      responseData[MESSAGELIST] = messageList;
-      responseData[HASNEXT] = hasNextPage;
-    }
+    final messageList = jsonDecode(messageString);
+    responseData[MESSAGELIST] = messageList;
+    responseData[HASNEXT] = hasNextPage;
     WELogger.v('notificationList Response -$responseData');
     WELogger.v('Response -$hasNextPage');
     return responseData;

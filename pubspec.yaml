@@ -1,10 +1,10 @@
 name: we_notificationinbox_flutter
 description: WE-NotififcationInbox-Plugin
-version: 1.0.0
+version: 1.0.1
 homepage: https://webengage.com/
 
 environment:
-  sdk: ">=2.19.0 <3.0.0"
+  sdk: ">=2.19.0 <4.0.0"
   flutter: ">=2.5.0"
 
 dependencies:

@@ -11,7 +11,7 @@ public class MainApplication: FlutterApplication() {
     override fun onCreate() {
         super.onCreate()
         val webEngageConfig = WebEngageConfig.Builder()
-            .setWebEngageKey("aa131d2c")
+            .setWebEngageKey("WEBENGAGE_LICENSE_KEY")
             .setAutoGCMRegistrationFlag(false)
             .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
             .setEventReportingStrategy(ReportingStrategy.FORCE_SYNC)

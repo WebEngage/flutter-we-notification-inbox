@@ -84,9 +84,9 @@ class WENotification{
         WENIHelper.shared.handleMultipleInboxEvent(event_name: WEConstants.METHOD_NAME_MARK_UNREAD, notificationList: notificationList)
         result(nil)
     }
-      
+    
     @objc func deleteAll(notificationList: NSArray, result: @escaping FlutterResult) {
-        WENIHelper.shared.handleMultipleInboxEvent(event_name: WEConstants.METHOD_NAME_DELETE_ALL, notificationList: notificationList)
+        WENIHelper.shared.handleMultipleInboxEvent(event_name: WEConstants.METHOD_NAME_MARK_DELETE, notificationList: notificationList)
         result(nil)
     }
 

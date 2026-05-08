@@ -168,7 +168,7 @@ class WENotification {
     }
 
     fun deleteAll(messageList: List<HashMap<String, String>>, result: MethodChannel.Result): Unit?  {
-        helper.handleMultipleInboxEvent(Constants.METHOD_NAME_DELETE_ALL, messageList)
+        helper.handleMultipleInboxEvent(Constants.METHOD_NAME_MARK_DELETE, messageList)
         return result?.success(null);
     }
 

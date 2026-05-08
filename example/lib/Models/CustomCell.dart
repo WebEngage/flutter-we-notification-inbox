@@ -11,6 +11,7 @@ class CustomCell extends StatefulWidget {
   Map<String, dynamic> inboxMessage;
 
   Function updateStatus;
+  Function onDelete;
 
   CustomCell(
       {super.key,
@@ -19,7 +20,8 @@ class CustomCell extends StatefulWidget {
       required this.experimentId,
       required this.status,
       required this.inboxMessage,
-      required this.updateStatus});
+      required this.updateStatus,
+      required this.onDelete});
 
   @override
   State<CustomCell> createState() => _CustomCellState();
@@ -173,6 +175,7 @@ class _CustomCellState extends State<CustomCell> {
 
   void trackDelete(BuildContext context) {
     _weNotificationInboxFlutterPlugin.markDelete(inboxMessage);
+    widget.onDelete();
     showAlertDialog(context, "Marked as Deleted",
         "This notification has been marked as deleted.");
   }

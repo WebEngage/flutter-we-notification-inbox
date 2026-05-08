@@ -137,6 +137,11 @@ class _NotificationInboxState extends State<NotificationInbox> {
                     inboxMessage: notificationItem,
                     updateStatus: (newStatus) {
                       updateCellDataList(index, newStatus);
+                    },
+                    onDelete: () {
+                      setState(() {
+                        _notificationList.removeAt(index);
+                      });
                     });
               },
             )
@@ -212,6 +217,9 @@ class _NotificationInboxState extends State<NotificationInbox> {
 
       case 'deleteAll':
         _weNotificationInboxFlutterPlugin.deleteAll(_notificationList);
+        setState(() {
+          _notificationList.clear();
+        });
         break;
     }
   }

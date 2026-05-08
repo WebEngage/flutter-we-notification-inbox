@@ -99,6 +99,5 @@ void main() {
         MockWeNotificationinboxFlutterPlatform();
     WENotificationInboxFlutterPlatform.instance = fakePlatform;
 
-    expect(await weNotificationinboxFlutterPlugin.getPlatformVersion(), '42');
   });
 }

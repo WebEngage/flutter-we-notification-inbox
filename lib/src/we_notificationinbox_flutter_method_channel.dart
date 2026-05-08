@@ -8,8 +8,13 @@ import '../utils/Constants.dart';
 import '../utils/WELogger.dart';
 import 'we_notificationinbox_flutter_platform_interface.dart';
 
+/// The method channel implementation of [WENotificationInboxFlutterPlatform].
+///
+/// This class communicates with the native iOS and Android SDKs
+/// via Flutter method channels.
 class MethodChannelWeNotificationinboxFlutter
     extends WENotificationInboxFlutterPlatform {
+  /// The method channel used to communicate with the native platform.
   @visibleForTesting
   final methodChannel =
       const MethodChannel(METHOD_CHANNEL_WE_NOTIFICATIONINBOX_FLUTTER);
@@ -167,6 +172,10 @@ class MethodChannelWeNotificationinboxFlutter
         .invokeMethod(METHOD_NAME_RESET_NOTIFICATION_COUNT);
   }
 
+  /// Parses the raw platform response into a structured notification list map.
+  ///
+  /// Returns a [Map] containing [MESSAGELIST] (decoded JSON list) and
+  /// [HASNEXT] (pagination flag).
   dynamic notificationListResponse(dynamic result) {
     Map<String, dynamic> responseData = {};
     final messageString = result[MESSAGELIST] as String;

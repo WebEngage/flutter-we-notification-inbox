@@ -1,3 +1,8 @@
+## 2.0.0
+
+- Added Swift Package Manager (SPM) support for iOS.
+- Updated minimum iOS deployment target to 13.0.
+
 ## 1.0.2
 
 - Fixed an issue with the “Delete All” functionality.

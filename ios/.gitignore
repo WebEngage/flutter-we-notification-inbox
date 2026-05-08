@@ -36,3 +36,10 @@ Icon?
 /Flutter/Generated.xcconfig
 /Flutter/ephemeral/
 /Flutter/flutter_export_environment.sh
+
+# Swift Package Manager
+.build/
+Package.resolved
+we_notificationinbox_flutter/.build/
+we_notificationinbox_flutter/.swiftpm/
+we_notificationinbox_flutter/Package.resolved

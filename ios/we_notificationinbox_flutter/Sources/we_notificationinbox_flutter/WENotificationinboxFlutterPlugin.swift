@@ -5,7 +5,7 @@ import WebEngage
 
 public class WENotificationInboxFlutterPlugin: NSObject, FlutterPlugin {
 
-  static let WEGPluginVersion: String = "2.0.0"
+  static let WEGPluginVersion: String = "2.1.0"
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: WEConstants.WE_NOTIFICATIONINBOX_FLUTTER, binaryMessenger: registrar.messenger())
     let instance = WENotificationInboxFlutterPlugin()

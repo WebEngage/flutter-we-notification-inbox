@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'we_notificationinbox_flutter'
-  s.version          = '2.1.0'
+  s.version          = '2.2.0'
   s.summary          = 'WE-NotififcationInbox-Plugin'
   s.description      = <<-DESC
 WE-NotififcationInbox-Plugin sdk

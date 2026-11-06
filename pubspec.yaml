@@ -1,11 +1,11 @@
 name: we_notificationinbox_flutter
 description: WebEngage Notification Inbox plugin for Flutter. Manage push notification messages with read, unread, delete, and tracking capabilities.
-version: 2.1.0
+version: 2.2.0
 homepage: https://webengage.com/
 
 environment:
-  sdk: ">=2.19.0 <4.0.0"
-  flutter: ">=2.5.0"
+  sdk: '>=2.18.6 <4.0.0'
+  flutter: '>=3.27.0'
 
 dependencies:
   flutter:
